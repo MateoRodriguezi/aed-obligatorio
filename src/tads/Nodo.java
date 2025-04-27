@@ -10,22 +10,22 @@ package tads;
  */
 public class Nodo<T>  {
 
-    private int dato;
-    private Nodo siguiente;
+    private T dato;
+    private Nodo<T> siguiente;
 
-    public int getDato() {
+    public T getDato() {
         return dato;
     }
 
-    public void setDato(int dato) {
+    public void setDato(T dato) {
         this.dato = dato;
     }
 
-    public Nodo getSiguiente() {
+    public Nodo<T> getSiguiente() {
         return siguiente;
     }
 
-    public void setSiguiente(Nodo siguiente) {
+    public void setSiguiente(Nodo<T> siguiente) {
         this.siguiente = siguiente;
     }
 

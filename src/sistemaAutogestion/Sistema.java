@@ -66,7 +66,12 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno registrarSala(String nombre, int capacidad) {
-        return Retorno.noImplementada();
+        
+        if(capacidad <= 0){
+            return Retorno.error2();
+        }
+        
+        for(Sala s: listaSalas)
     }
 
     @Override
