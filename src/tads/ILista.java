@@ -1,29 +1,38 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
+ */
 package tads;
 
 /**
  *
  * @author mateorodriguez
  */
-public interface ILista<T> {
+public interface ILista {
 
-
+    // Retorna true si la lista está vacía, false en caso contrario
     public boolean esVacia();
 
-    public void agregarInicio(T elemento);
+    // Agrega un elemento al inicio de la lista
+    public void agregarInicio(int elemento);
 
-    public void agregarFinal(T elemento);
+    // Agrega un elemento al final de la lista
+    public void agregarFinal(int elemento);
 
+    // Borra el primer elemento de la lista
     public void borrarInicio();
 
+    // Borra el último elemento de la lista
     public void borrarFinal();
 
+    // Elimina todos los elementos de la lista
     public void vaciar();
 
+    // Muestra los elementos de la lista (puede ser con un System.out)
     public void mostrar();
 
-    public T obtenerElemento(int indice);
+    public int obtenerElemento(int indice);
 
-    public void insertarOrdenado(T dato);
-    
+    public void insertarOrdenado(int dato);
+
 }

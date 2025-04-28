@@ -10,7 +10,7 @@ package tads;
  */
 public class ListaSE<T> implements ILista {
 
-    private Nodo<T> inicio;
+    private Nodo inicio;
 
     public ListaSE() {
         inicio = null;
@@ -20,32 +20,21 @@ public class ListaSE<T> implements ILista {
     public boolean esVacia() {
         return inicio == null;
     }
-    
-    
-//    public void agregarInicio(T dato) {
-//        if (esVacia()) {
-//            Nodo<T> nuevo = new Nodo();
-//            nuevo.setDato(dato);
-//            nuevo.setSiguiente(inicio);
-//            inicio = nuevo;
-//        }
-//    }
-//
-//    @Override
-//    public void agregarFinal(T dato) {
-//    Nodo<T> nuevo = new Nodo<>();
-//    nuevo.setDato(dato);
-//    nuevo.setSiguiente(null);
-//    if (esVacia()) {
-//        inicio = nuevo;
-//    } else {
-//        Nodo<T> aux = inicio;
-//        while (aux.getSiguiente() != null) {
-//            aux = aux.getSiguiente();
-//        }
-//        aux.setSiguiente(nuevo);
-//    }
-//}
+
+    @Override
+    public void agregarInicio(int n) {
+        if (esVacia()) {
+            Nodo nuevo = new Nodo();
+            nuevo.setDato(n);
+            nuevo.setSiguiente(inicio);
+            inicio = nuevo;
+        }
+    }
+
+    @Override
+    public void agregarFinal(int elemento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
     @Override
     public void borrarInicio() {
@@ -56,17 +45,7 @@ public class ListaSE<T> implements ILista {
 
     @Override
     public void borrarFinal() {
-        if (!esVacia()) {
-            if (inicio.getSiguiente() == null) {
-                inicio = null;
-            } else {
-                Nodo<T> aux = inicio;
-                while (aux.getSiguiente() != null && aux.getSiguiente().getSiguiente() != null) {
-                    aux = aux.getSiguiente();
-                }
-                aux.setSiguiente(null);
-            }
-        }
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -81,13 +60,13 @@ public class ListaSE<T> implements ILista {
 
     // Agregar nuestra propia excepcion seria bueno
     @Override
-    public T obtenerElemento(int indice) {
-        Nodo<T> aux = inicio;
+    public int obtenerElemento(int indice) {
+        Nodo aux = inicio;
         int actual = 0;
 
         while (aux != null) {
             if (actual == indice) {
-                return aux.getDato(); 
+                return aux.getDato(); // Asumimos que getDato() devuelve int
             } else {
                 aux = aux.getSiguiente();
                 actual++;
@@ -97,28 +76,10 @@ public class ListaSE<T> implements ILista {
         // Si no se encontró el índice, lanzamos una excepción
         throw new PosFueraDeRangoException();
     }
-    
-//    @Override
-//    public void insertarOrdenado(T dato) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//    }
 
     @Override
-    public void agregarInicio(Object elemento) {
+    public void insertarOrdenado(int dato) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    @Override
-    public void agregarFinal(Object elemento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void insertarOrdenado(Object dato) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    
 }
-
-
