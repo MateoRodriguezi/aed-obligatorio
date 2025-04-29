@@ -8,25 +8,28 @@ package tads;
  *
  * @author mateorodriguez
  */
-public class Nodo<T>  {
+public class Nodo<T> {
 
-    private int dato;
-    private Nodo siguiente;
+    private T dato;
+    private Nodo<T> siguiente;  // Nodo debe ser del tipo genérico T
 
-    public int getDato() {
+    // Método para obtener el dato
+    public T getDato() {
         return dato;
     }
 
-    public void setDato(int dato) {
+    // Método para establecer el dato
+    public void setDato(T dato) {
         this.dato = dato;
     }
 
-    public Nodo getSiguiente() {
+    // Método para obtener el siguiente nodo
+    public Nodo<T> getSiguiente() {
         return siguiente;
     }
 
-    public void setSiguiente(Nodo siguiente) {
+    // Método para establecer el siguiente nodo
+    public void setSiguiente(Nodo<T> siguiente) {
         this.siguiente = siguiente;
     }
-
 }

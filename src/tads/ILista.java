@@ -8,17 +8,17 @@ package tads;
  *
  * @author mateorodriguez
  */
-public interface ILista {
-
+public interface ILista<T> {
+    
     // Retorna true si la lista está vacía, false en caso contrario
     public boolean esVacia();
 
     // Agrega un elemento al inicio de la lista
-    public void agregarInicio(int elemento);
-
+    public void agregarInicio(T elemento);
+    
     // Agrega un elemento al final de la lista
-    public void agregarFinal(int elemento);
-
+    public void agregarFinal(T elemento);
+    
     // Borra el primer elemento de la lista
     public void borrarInicio();
 
@@ -31,8 +31,7 @@ public interface ILista {
     // Muestra los elementos de la lista (puede ser con un System.out)
     public void mostrar();
 
-    public int obtenerElemento(int indice);
-
-    public void insertarOrdenado(int dato);
-
+    public T obtenerElemento(int indice);
+    
+    public void insertarOrdenado(T dato);
 }

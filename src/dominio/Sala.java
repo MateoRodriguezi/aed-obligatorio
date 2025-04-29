@@ -34,4 +34,21 @@ public class Sala implements Comparable<Sala> {
         // Comparar alfabéticamente por el nombre
         return this.nombre.compareTo(otraSala.nombre);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Sala otraSala = (Sala) obj;
+        return this.nombre.equalsIgnoreCase(otraSala.nombre);
+    }
+
+    @Override
+    public int hashCode() {
+        return nombre.toLowerCase().hashCode();
+    }
 }
