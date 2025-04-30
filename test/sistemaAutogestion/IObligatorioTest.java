@@ -21,7 +21,8 @@
  
      @Before
      public void setUp() {
-         //Completar para primera entrega
+         miSistema = new Sistema();
+         miSistema.crearSistemaDeGestion();
      }
  
      @Test
@@ -31,8 +32,34 @@
  
      @Test
      public void testRegistrarSala() {
-         //Completar para primera entrega
+        Retorno resultado1 = miSistema.registrarSala("Sala Norte", 100);
+        assertEquals(Retorno.Resultado.OK, resultado1.resultado);
+      
      }
+     
+     @Test
+     public void testRegistrarSalaError1() {
+         
+        Retorno resultado1 = miSistema.registrarSala("Sala Norte", 100);
+        assertEquals(Retorno.Resultado.OK, resultado1.resultado);
+        
+        Retorno resultado2 = miSistema.registrarSala("Sala Norte", 100);
+        assertEquals(Retorno.Resultado.ERROR_1, resultado2.resultado);
+      
+     }
+     
+     @Test
+     public void testRegistrarSalaError2() {
+         
+        Retorno resultado1 = miSistema.registrarSala("Sala Norte", 0);
+        assertEquals(Retorno.Resultado.ERROR_2, resultado1.resultado);
+        
+        Retorno resultado2 = miSistema.registrarSala("Sala Sur",-100);
+        assertEquals(Retorno.Resultado.ERROR_2, resultado2.resultado);
+      
+     }
+     
+     
  
      @Test
      public void testEliminarSala() {

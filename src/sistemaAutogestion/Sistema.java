@@ -16,53 +16,16 @@ public class Sistema implements IObligatorio {
     private ListaSE<Sala> listaSalas;
     private ListaSE<Cliente> listaClientes;
     private ListaSE<Evento> listaEventos;
-    private Cola<Cliente> clientesEnEspera;
-
-    public Retorno Sistema() {
-        listaSalas = new ListaSE<>();
-        listaClientes = new ListaSE<>();
-        listaEventos = new ListaSE<>();
-        return (Retorno.ok());
-    }
-
-    public ListaSE<Sala> getListaSalas() {
-        return listaSalas;
-    }
-
-    public void setListaSalas(ListaSE<Sala> listaSalas) {
-        this.listaSalas = listaSalas;
-    }
-
-    public ListaSE<Cliente> getListaClientes() {
-        return listaClientes;
-    }
-
-    public void setListaClientes(ListaSE<Cliente> listaClientes) {
-        this.listaClientes = listaClientes;
-    }
-
-    public ListaSE<Evento> getListaEventos() {
-        return listaEventos;
-    }
-
-    public void setListaEventos(ListaSE<Evento> listaEventos) {
-        this.listaEventos = listaEventos;
-    }
+//    private Cola<Cliente> clientesEnEspera;
 
     @Override
     public Retorno crearSistemaDeGestion() {
-        // Verifico si las colecciones ya están inicializadas
-        if (this.listaSalas == null || this.listaClientes == null || this.listaEventos == null) {
-            return Retorno.noImplementada();
-        }
+        // Inicializamos las listas desde cero
+        listaSalas = new ListaSE<>();
+        listaClientes = new ListaSE<>();
+        listaEventos = new ListaSE<>();
 
-        Retorno ret = new Retorno(Retorno.Resultado.OK);
-
-        this.setListaSalas(listaSalas);
-        this.setListaClientes(listaClientes);
-        this.setListaEventos(listaEventos);
-
-        return ret;
+        return Retorno.ok();
     }
 
     @Override
@@ -71,7 +34,7 @@ public class Sistema implements IObligatorio {
             return Retorno.error2(); // capacidad inválida
         }
         Sala s = new Sala(nombre,capacidad);
-        if(listaSalas.obtenerElemento(s) != null)
+        if(listaSalas.obtenerElemento(s) == null)
         {
             listaSalas.agregarFinal(s);
             return Retorno.ok();
@@ -79,8 +42,6 @@ public class Sistema implements IObligatorio {
         {
             return Retorno.error1();
         }
-        
-            
         
     }
 
