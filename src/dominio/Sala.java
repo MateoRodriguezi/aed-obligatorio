@@ -12,9 +12,8 @@ public class Sala implements Comparable<Sala> {
 
     private String nombre;
     private int capacidad;
-    
-    public Sala(String nom, int cap)
-    {
+
+    public Sala(String nom, int cap) {
         nombre = nom;
         capacidad = cap;
     }
@@ -43,14 +42,15 @@ public class Sala implements Comparable<Sala> {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
+        if (!(obj instanceof Sala)) {
             return false;
         }
-        Sala otraSala = (Sala) obj;
-        return this.nombre.equals(otraSala.getNombre());
+        return this.nombre.equals(((Sala) obj).nombre);
+    }
+
+    @Override
+    public String toString() {
+        return nombre + "-" + capacidad;
     }
 
 }

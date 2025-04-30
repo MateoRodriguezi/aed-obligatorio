@@ -22,6 +22,10 @@ public class ListaSE<T> implements ILista<T> {
         return inicio == null;
     }
 
+    private Nodo getInicio() {
+        return inicio;
+    }
+
     @Override
     public void agregarInicio(T dato) {
         Nodo<T> nuevo = new Nodo<>();
@@ -55,7 +59,7 @@ public class ListaSE<T> implements ILista<T> {
         if (!esVacia()) {
             inicio = inicio.getSiguiente();
         }
-        
+
         size--;
 
     }
@@ -71,7 +75,7 @@ public class ListaSE<T> implements ILista<T> {
             }
             aux.setSiguiente(null);
         }
-                
+
         size--;
 
     }
@@ -97,10 +101,10 @@ public class ListaSE<T> implements ILista<T> {
     public T obtenerElemento(T elemento) {
         Nodo aux = inicio;
         int cont = 0;
-        
-        while(aux != null && cont <= size){
-            if(aux.getDato().equals(elemento)){
-                return (T)aux.getDato();
+
+        while (aux != null && cont <= size) {
+            if (aux.getDato().equals(elemento)) {
+                return (T) aux.getDato();
             }
             cont++;
             aux = aux.getSiguiente();
@@ -108,9 +112,37 @@ public class ListaSE<T> implements ILista<T> {
         return null;
     }
 
+// Nico agregue este metodo a ILista chusmealo y decime que te parece
+    @Override
+    public void eliminarElemento(T elemento) {
+        //Evaluo el primero 
+
+        if (inicio != null) {
+
+            if (inicio.getDato() == elemento) {
+                inicio = inicio.getSiguiente();
+            } else {
+                Nodo actual = inicio;
+                while (actual.getSiguiente() != null && actual.getSiguiente().getDato().equals(elemento)) {
+                    actual = actual.getSiguiente();
+                }
+                if (actual.getSiguiente() != null) {
+                    Nodo aBorrar = actual.getSiguiente();
+                    actual.setSiguiente(aBorrar.getSiguiente());
+                    aBorrar.setSiguiente(null);
+
+                }
+            }
+        }
+    }
+
     @Override
     public void insertarOrdenado(T dato) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    @Override
+    public int cantidadElementos() {
+        return size;
+    }
 }

@@ -14,6 +14,9 @@ public class Cliente implements Comparable<Cliente> {
     private String nombre;
 
     // Constructor
+    public Cliente() {
+    }
+
     public Cliente(String cedula, String nombre) {
         this.cedula = cedula;
         this.nombre = nombre;

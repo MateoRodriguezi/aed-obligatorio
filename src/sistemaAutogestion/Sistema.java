@@ -16,7 +16,6 @@ public class Sistema implements IObligatorio {
     private ListaSE<Sala> listaSalas;
     private ListaSE<Cliente> listaClientes;
     private ListaSE<Evento> listaEventos;
-//    private Cola<Cliente> clientesEnEspera;
 
     @Override
     public Retorno crearSistemaDeGestion() {
@@ -33,31 +32,84 @@ public class Sistema implements IObligatorio {
         if (capacidad <= 0) {
             return Retorno.error2(); // capacidad inválida
         }
-        Sala s = new Sala(nombre,capacidad);
-        if(listaSalas.obtenerElemento(s) == null)
-        {
+        Sala s = new Sala(nombre, capacidad);
+        if (listaSalas.obtenerElemento(s) == null) {
             listaSalas.agregarFinal(s);
             return Retorno.ok();
-        }else
-        {
+        } else {
             return Retorno.error1();
         }
-        
+
     }
 
     @Override
     public Retorno eliminarSala(String nombre) {
-        return Retorno.noImplementada();
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return Retorno.error1(); // nombre inválido
+        }
+
+        Sala sBuscar = new Sala(nombre, 1); // la capacidad no importa para equals
+        Sala salaReal = listaSalas.obtenerElemento(sBuscar);
+
+        if (salaReal == null) {
+            return Retorno.error1(); // no existe la sala
+        }
+
+        listaSalas.eliminarElemento(sBuscar); // la eliminamos
+        return Retorno.ok();
     }
 
     @Override
     public Retorno registrarEvento(String codigo, String descripcion, int aforoNecesario, LocalDate fecha) {
-        return Retorno.noImplementada();
+
+        // Verificamos si ya existe un evento con ese código
+        Evento eBuscar = new Evento();
+        eBuscar.setCodigo(codigo);
+
+        Evento eventoReal = listaEventos.obtenerElemento(eBuscar);
+        if (eventoReal != null) {
+            return Retorno.error1(); // ya existe evento con ese código
+        }
+
+        if (aforoNecesario <= 0) {
+            return Retorno.error2();
+        }
+
+//        if (fecha == null || fecha.isBefore(LocalDate.now())) {
+//            return Retorno.error3();
+//        }
+        // Buscar sala con capacidad suficiente
+        // Me falta implementar esta logica 
+        // Crear evento nuevo
+        Evento nuevoEvento = new Evento();
+        nuevoEvento.setCodigo(codigo);
+        nuevoEvento.setDescripcion(descripcion);
+        nuevoEvento.setAforoNecesario(aforoNecesario);
+        nuevoEvento.setFecha(fecha.atStartOfDay());
+//        nuevoEvento.setSala(salaAsignada);
+
+        listaEventos.agregarFinal(nuevoEvento);
+        return Retorno.ok();
     }
 
     @Override
     public Retorno registrarCliente(String cedula, String nombre) {
-        return Retorno.noImplementada();
+        
+        if (cedula == null || cedula.length() != 8) {
+            return Retorno.error1(); // Formato inválido
+        }
+        
+        Cliente clienteBuscar = new Cliente();
+        clienteBuscar.setCedula(cedula);
+
+        if (listaClientes.obtenerElemento(clienteBuscar) != null) {
+            return Retorno.error2(); // Cliente ya existe
+        }
+
+        Cliente nuevoCliente = new Cliente(cedula, nombre);
+        listaClientes.agregarFinal(nuevoCliente);
+
+        return Retorno.ok();
     }
 
     @Override

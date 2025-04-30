@@ -18,6 +18,8 @@ public class Evento implements Comparable<Evento> {
     private LocalDateTime fecha;
     private Sala sala;
 
+    public Evento() {
+    }
 
     public String getCodigo() {
         return codigo;
@@ -51,9 +53,32 @@ public class Evento implements Comparable<Evento> {
         this.fecha = fecha;
     }
 
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
+    }
+
     @Override
     public int compareTo(Evento otroEvento) {
         // Compara las fechas de los dos eventos
         return this.fecha.compareTo(otroEvento.fecha);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Evento)) {
+            return false;
+        }
+        return this.codigo.equals(((Evento) obj).codigo);
+    }
+
+    @Override
+    public String toString() {
+        return codigo + "-" + descripcion + "-" + aforoNecesario + "-"
+                + sala.getCapacidad() + "-" + aforoNecesario;
+    }
+
 }

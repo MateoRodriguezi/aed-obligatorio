@@ -34,4 +34,8 @@ public interface ILista<T> {
     public T obtenerElemento(T elemento);
     
     public void insertarOrdenado(T dato);
+    
+    public void eliminarElemento(T elemento);
+    
+    public int cantidadElementos();
 }
