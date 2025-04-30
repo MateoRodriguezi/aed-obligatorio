@@ -23,3 +23,8 @@
 hs_err_pid*
 replay_pid*
 /dist/
+
+# NetBeans local configuration (evita conflictos por usuario)
+nbproject/private/
+**/build.properties
+**/private.properties
