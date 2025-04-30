@@ -5,6 +5,7 @@
 package dominio;
 
 import java.time.LocalDateTime;
+import tads.ListaSE;
 
 /**
  *
@@ -17,6 +18,10 @@ public class Evento implements Comparable<Evento> {
     private int aforoNecesario;
     private LocalDateTime fecha;
     private Sala sala;
+    private ListaSE<Entrada> entradasvendidas;
+    //private Cola<Cliente> listaDeEspera;
+    private int disponibilidad = sala.getCapacidad();
+    
 
     public Evento() {
     }

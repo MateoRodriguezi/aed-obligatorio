@@ -8,7 +8,7 @@ package tads;
  *
  * @author mateorodriguez
  */
-public class Nodo<T> {
+public class Nodo<T extends Comparable> {
 
     private T dato;
     private Nodo<T> siguiente;  // Nodo debe ser del tipo genérico T

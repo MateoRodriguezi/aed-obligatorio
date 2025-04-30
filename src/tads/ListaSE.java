@@ -8,7 +8,7 @@ package tads;
  *
  * @author mateorodriguez
  */
-public class ListaSE<T> implements ILista<T> {
+public class ListaSE<T extends Comparable> implements ILista<T> {
 
     private Nodo<T> inicio;
     private int size = 0;

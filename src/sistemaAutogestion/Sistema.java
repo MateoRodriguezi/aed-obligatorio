@@ -16,6 +16,7 @@ public class Sistema implements IObligatorio {
     private ListaSE<Sala> listaSalas;
     private ListaSE<Cliente> listaClientes;
     private ListaSE<Evento> listaEventos;
+    private Pila<Entrada> historialCompras;
 
     @Override
     public Retorno crearSistemaDeGestion() {
@@ -33,12 +34,11 @@ public class Sistema implements IObligatorio {
             return Retorno.error2(); // capacidad inválida
         }
         Sala s = new Sala(nombre, capacidad);
-        if (listaSalas.obtenerElemento(s) == null) {
-            listaSalas.agregarFinal(s);
-            return Retorno.ok();
-        } else {
-            return Retorno.error1();
+        if (listaSalas.obtenerElemento(s) != null) {
+            return Retorno.error1(); // Sala ya existe
         }
+        listaSalas.agregarFinal(s);
+        return Retorno.ok();
 
     }
 
@@ -114,7 +114,22 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno comprarEntrada(String cedula, String codigoEvento) {
-        return Retorno.noImplementada();
+        Cliente clienteBuscar = new Cliente();
+        clienteBuscar.setCedula(cedula);
+        if (listaClientes.obtenerElemento(clienteBuscar) == null) {
+            return Retorno.error1(); // Cliente NO existe
+        }
+        Evento eventoBuscar = new Evento();
+        eventoBuscar.setCodigo(codigoEvento);
+        if (listaEventos.obtenerElemento(eventoBuscar) == null){
+            return Retorno.error2(); //EVENTO NO EXISTE
+        }
+        
+        //DECIDIR COMO USAR LA PILA (POR EL REQUERIMIENTO 2.7)
+        //VALIDAR CAPACIDAD DISPONIBLE CON EVENTO.GETDISPONIBILIDAD 
+        //Y SI ES > A 0 SE ASIGNA CLIENTE A ENTRADA Y ENTRADA A EVENTO
+        //EN CASO CONTRARIO SI ASIGNA CLIENTE A LISTA DE ESPERA DEL EVENTO
+        return Retorno.ok();
     }
 
     @Override

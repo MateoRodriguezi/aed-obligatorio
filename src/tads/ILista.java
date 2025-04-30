@@ -8,7 +8,7 @@ package tads;
  *
  * @author mateorodriguez
  */
-public interface ILista<T> {
+public interface ILista<T extends Comparable> {
     
     // Retorna true si la lista está vacía, false en caso contrario
     public boolean esVacia();
