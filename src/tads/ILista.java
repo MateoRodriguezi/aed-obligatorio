@@ -31,7 +31,7 @@ public interface ILista<T> {
     // Muestra los elementos de la lista (puede ser con un System.out)
     public void mostrar();
 
-    public T obtenerElemento(int indice);
+    public T obtenerElemento(T elemento);
     
     public void insertarOrdenado(T dato);
 }

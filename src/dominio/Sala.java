@@ -12,6 +12,12 @@ public class Sala implements Comparable<Sala> {
 
     private String nombre;
     private int capacidad;
+    
+    public Sala(String nom, int cap)
+    {
+        nombre = nom;
+        capacidad = cap;
+    }
 
     public String getNombre() {
         return nombre;
@@ -44,11 +50,7 @@ public class Sala implements Comparable<Sala> {
             return false;
         }
         Sala otraSala = (Sala) obj;
-        return this.nombre.equalsIgnoreCase(otraSala.nombre);
+        return this.nombre.equals(otraSala.getNombre());
     }
 
-    @Override
-    public int hashCode() {
-        return nombre.toLowerCase().hashCode();
-    }
 }

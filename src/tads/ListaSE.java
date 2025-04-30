@@ -11,6 +11,7 @@ package tads;
 public class ListaSE<T> implements ILista<T> {
 
     private Nodo<T> inicio;
+    private int size = 0;
 
     public ListaSE() {
         inicio = null;
@@ -27,6 +28,7 @@ public class ListaSE<T> implements ILista<T> {
         nuevo.setDato(dato);
         nuevo.setSiguiente(inicio);
         inicio = nuevo;
+        size++;
     }
 
     @Override
@@ -44,6 +46,8 @@ public class ListaSE<T> implements ILista<T> {
             }
             aux.setSiguiente(nuevo);
         }
+        size++;
+
     }
 
     @Override
@@ -51,6 +55,9 @@ public class ListaSE<T> implements ILista<T> {
         if (!esVacia()) {
             inicio = inicio.getSiguiente();
         }
+        
+        size--;
+
     }
 
     @Override
@@ -64,11 +71,15 @@ public class ListaSE<T> implements ILista<T> {
             }
             aux.setSiguiente(null);
         }
+                
+        size--;
+
     }
 
     @Override
     public void vaciar() {
         inicio = null; // Eliminamos todos los nodos
+        size = 0;
     }
 
     @Override
@@ -83,19 +94,18 @@ public class ListaSE<T> implements ILista<T> {
     }
 
     @Override
-    public T obtenerElemento(int indice) {
-        Nodo<T> aux = inicio;
-        int actual = 0;
-
-        while (aux != null) {
-            if (actual == indice) {
-                return aux.getDato();
+    public T obtenerElemento(T elemento) {
+        Nodo aux = inicio;
+        int cont = 0;
+        
+        while(aux != null && cont <= size){
+            if(aux.getDato().equals(elemento)){
+                return (T)aux.getDato();
             }
+            cont++;
             aux = aux.getSiguiente();
-            actual++;
         }
-
-        throw new IndexOutOfBoundsException("Índice " + indice + " fuera de rango.");
+        return null;
     }
 
     @Override

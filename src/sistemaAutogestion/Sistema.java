@@ -18,10 +18,11 @@ public class Sistema implements IObligatorio {
     private ListaSE<Evento> listaEventos;
     private Cola<Cliente> clientesEnEspera;
 
-    public Sistema() {
+    public Retorno Sistema() {
         listaSalas = new ListaSE<>();
         listaClientes = new ListaSE<>();
         listaEventos = new ListaSE<>();
+        return (Retorno.ok());
     }
 
     public ListaSE<Sala> getListaSalas() {
@@ -69,11 +70,18 @@ public class Sistema implements IObligatorio {
         if (capacidad <= 0) {
             return Retorno.error2(); // capacidad inválida
         }
-
-        // acá iría buscar si ya existe una sala con ese nombre
-//        for(Sala : listaSalas)
-        // si todo bien:
-        return Retorno.ok();
+        Sala s = new Sala(nombre,capacidad);
+        if(listaSalas.obtenerElemento(s) != null)
+        {
+            listaSalas.agregarFinal(s);
+            return Retorno.ok();
+        }else
+        {
+            return Retorno.error1();
+        }
+        
+            
+        
     }
 
     @Override
