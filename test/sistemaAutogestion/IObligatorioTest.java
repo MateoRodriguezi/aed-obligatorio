@@ -129,8 +129,20 @@ public class IObligatorioTest {
     }
 
     @Test
-    public void testListarClientes() {
-        //Completar para primera entrega
+    public void testListarClientesOK() {
+
+        miSistema.registrarCliente("45678992", "Micaela Ferrez");
+        miSistema.registrarCliente("47489126", "Mateo Rodriguez");
+        miSistema.registrarCliente("12345678", "Nicolas Cardona");
+        miSistema.registrarCliente("35679992", "Ramiro Perez");
+        miSistema.registrarCliente("23331118", "Martina Bustos");
+
+        Retorno ret = miSistema.listarClientes();
+
+        assertEquals(Retorno.Resultado.OK, ret.resultado);
+
+        String esperado = "12345678-Nicolas Cardona#23331118-Martina Bustos#35679992-Ramiro Perez#45678992-Micaela Ferrez#47489126-Mateo Rodriguez";
+        assertEquals(esperado, ret.valorString);
     }
 
     @Test

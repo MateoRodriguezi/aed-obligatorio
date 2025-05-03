@@ -39,10 +39,9 @@ public class Cliente implements Comparable<Cliente> {
         this.nombre = nombre;
     }
 
-    // toString
     @Override
     public String toString() {
-        return "Cliente{" + "cedula=" + cedula + ", nombre=" + nombre + '}';
+        return cedula + "-" + nombre;
     }
 
     // Implementación de compareTo por cédula

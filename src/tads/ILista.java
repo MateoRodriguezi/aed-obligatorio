@@ -29,7 +29,7 @@ public interface ILista<T extends Comparable> {
     public void vaciar();
 
     // Muestra los elementos de la lista (puede ser con un System.out)
-    public void mostrar();
+    public String mostrar();
 
     public T obtenerElemento(T elemento);
     

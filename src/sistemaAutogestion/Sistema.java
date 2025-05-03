@@ -187,7 +187,17 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno listarClientes() {
-        return Retorno.noImplementada();
+        ListaSE<Cliente> clientesOrdenados = new ListaSE<>();
+
+        Nodo<Cliente> actual = listaClientes.getInicio();
+        while (actual != null) {
+            clientesOrdenados.insertarOrdenado(actual.getDato());
+            actual = actual.getSiguiente();
+        }
+
+        Retorno ret = Retorno.ok();
+        ret.valorString = clientesOrdenados.mostrar();  // Igual que en el ejemplo del profe
+        return ret;
     }
 
     @Override

@@ -87,14 +87,17 @@ public class ListaSE<T extends Comparable> implements ILista<T> {
     }
 
     @Override
-    public void mostrar() {
-        if (inicio != null) {
-            Nodo aux = inicio;
-            while (aux.getSiguiente() != null) {
-                System.out.println(aux.getDato() + " ");
-                aux = aux.getSiguiente();
+    public String mostrar() {
+        Nodo<T> mostrar = inicio;
+        String res = "";
+        while (mostrar != null) {
+            res += mostrar.getDato();  // usa toString del dato
+            if (mostrar.getSiguiente() != null) {
+                res += "#";  // agrega # si no es el último
             }
+            mostrar = mostrar.getSiguiente();
         }
+        return res;
     }
 
     @Override
