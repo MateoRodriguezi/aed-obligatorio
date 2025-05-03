@@ -16,6 +16,9 @@ public class Entrada implements Comparable<Entrada> {
     private Evento evento;
     private LocalDateTime fechaCompra;
     private int id;
+    private boolean devuelta;
+    private Integer calificacion; // null si no fue calificada
+    private String comentario; // null si no hay comentario
 
     public int getId() {
         return id;
@@ -23,12 +26,6 @@ public class Entrada implements Comparable<Entrada> {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Override
-    public int compareTo(Entrada otraEntrada) {
-        // Compara los ids de las dos instancias
-        return Integer.compare(this.id, otraEntrada.id);
     }
 
     public Cliente getCliente() {
@@ -47,5 +44,55 @@ public class Entrada implements Comparable<Entrada> {
         this.evento = evento;
     }
 
-    
+    public LocalDateTime getFechaCompra() {
+        return fechaCompra;
+    }
+
+    public void setFechaCompra(LocalDateTime fechaCompra) {
+        this.fechaCompra = fechaCompra;
+    }
+
+    public boolean isDevuelta() {
+        return devuelta;
+    }
+
+    public void setDevuelta(boolean devuelta) {
+        this.devuelta = devuelta;
+    }
+
+    public Integer getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(Integer calificacion) {
+        this.calificacion = calificacion;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
+    @Override
+    public int compareTo(Entrada otraEntrada) {
+        // Compara los ids de las dos instancias
+        return Integer.compare(this.id, otraEntrada.id);
+    }
+
+    @Override
+    public String toString() {
+        return "Entrada{" + "id=" + id + ", cliente=" + cliente + ", evento=" + evento + '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Entrada)) {
+            return false;
+        }
+        Entrada otra = (Entrada) obj;
+        return this.id == otra.id;
+    }
 }

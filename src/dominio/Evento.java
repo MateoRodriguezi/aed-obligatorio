@@ -68,9 +68,9 @@ public class Evento implements Comparable<Evento> {
 
     @Override
     public int compareTo(Evento otroEvento) {
-        // Compara las fechas de los dos eventos
-        return this.fecha.compareTo(otroEvento.fecha);
+        return this.codigo.compareTo(otroEvento.codigo);
     }
+
 
     @Override
     public boolean equals(Object obj) {

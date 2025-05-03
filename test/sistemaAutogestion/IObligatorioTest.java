@@ -25,11 +25,14 @@ public class IObligatorioTest {
         miSistema.crearSistemaDeGestion();
     }
 
+    // Requerimiento 1.1
     @Test
     public void testCrearSistemaDeGestion() {
-        //Completar para primera entrega
+        miSistema = new Sistema();
+        miSistema.crearSistemaDeGestion();
     }
 
+    // Requerimiento 1.2
     @Test
     public void testRegistrarSalaOK() {
         Retorno resultado1 = miSistema.registrarSala("Sala Norte", 100);
@@ -59,6 +62,7 @@ public class IObligatorioTest {
 
     }
 
+    // Requerimiento 1.3
     @Test
     public void testEliminarSalaOK() {
         // Caso 1: eliminar una sala existente
@@ -80,11 +84,14 @@ public class IObligatorioTest {
         assertEquals(Retorno.Resultado.ERROR_1, r2.resultado);
     }
 
+    // Requerimiento 1.4
+    // Este falta completarlo en sistema y en test
     @Test
     public void testRegistrarEvento() {
         //Completar para primera entrega
     }
 
+    // Requerimiento 1.5
     @Test
     public void testRegistrarClienteOk() {
         Retorno resultado = miSistema.registrarCliente("12345678", "Mateo");
@@ -95,7 +102,7 @@ public class IObligatorioTest {
     }
 
     @Test
-    public void testRegistrarClienteErro1() {
+    public void testRegistrarClienteError1() {
         Retorno resultado = miSistema.registrarCliente("12345", "Juan"); // menos de 8 dígitos
         assertEquals(Retorno.Resultado.ERROR_1, resultado.resultado);
     }
@@ -128,7 +135,26 @@ public class IObligatorioTest {
 
     @Test
     public void testEsSalaOptima() {
-        //Completar para primera entrega
+        // Matriz del ejemplo del  obligatorio
+        String[][] vista = {
+            {"#", "#", "#", "#", "#", "#", "#"},
+            {"#", "#", "X", "X", "X", "X", "#"},
+            {"#", "O", "O", "X", "X", "X", "#"},
+            {"#", "O", "O", "O", "O", "X", "#"},
+            {"#", "O", "O", "X", "O", "O", "#"},
+            {"#", "O", "O", "O", "O", "O", "#"},
+            {"#", "X", "X", "O", "O", "O", "#"},
+            {"#", "X", "X", "O", "O", "O", "#"},
+            {"#", "X", "X", "O", "X", "X", "#"},
+            {"#", "X", "X", "O", "X", "X", "#"},
+            {"#", "#", "#", "O", "#", "#", "#"},
+            {"#", "#", "#", "O", "#", "#", "#"}
+        };
+
+        Retorno ret = miSistema.esSalaOptima(vista);
+
+        assertEquals(Retorno.Resultado.OK, ret.resultado);
+        assertEquals("Es óptimo", ret.valorString);
     }
 
 }

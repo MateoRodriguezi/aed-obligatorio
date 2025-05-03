@@ -22,7 +22,7 @@ public class ListaSE<T extends Comparable> implements ILista<T> {
         return inicio == null;
     }
 
-    private Nodo getInicio() {
+    public Nodo getInicio() {
         return inicio;
     }
 
@@ -138,7 +138,23 @@ public class ListaSE<T extends Comparable> implements ILista<T> {
 
     @Override
     public void insertarOrdenado(T dato) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Nodo<T> nuevo = new Nodo<>();
+        nuevo.setDato(dato);
+
+        if (esVacia() || dato.compareTo(inicio.getDato()) < 0) {
+            nuevo.setSiguiente(inicio);
+            inicio = nuevo;
+        } else {
+            Nodo<T> aux = inicio;
+            while (aux.getSiguiente() != null && dato.compareTo(aux.getSiguiente().getDato()) > 0) {
+                aux = aux.getSiguiente();
+            }
+
+            nuevo.setSiguiente(aux.getSiguiente());
+            aux.setSiguiente(nuevo);
+        }
+
+        size++;
     }
 
     @Override
