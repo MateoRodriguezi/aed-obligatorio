@@ -181,10 +181,7 @@ public class Sistema implements IObligatorio {
             }
             actual = actual.getSiguiente();
         }
-        Calificacion cal = new Calificacion();
-        cal.setCliente(c);
-        cal.setComentario(comentario);
-        cal.setPuntaje(puntaje);
+        Calificacion cal = new Calificacion(c,puntaje,comentario);
         e.actualizarPromedio(cal);
         listaEventosCalificados.insertarOrdenado(e);
         return Retorno.ok();
