@@ -4,6 +4,9 @@
  */
 package dominio;
 
+import java.time.LocalDate;
+import tads.ListaSE;
+
 /**
  *
  * @author mateorodriguez
@@ -12,6 +15,7 @@ public class Cliente implements Comparable<Cliente> {
 
     private String cedula;
     private String nombre;
+
 
     // Constructor
     public Cliente() {
