@@ -20,7 +20,7 @@ public class Evento implements Comparable<Evento> {
     private LocalDateTime fecha;
     private Sala sala;
     private ListaSE<Entrada> entradasvendidas;
-    //private Cola<Cliente> listaDeEspera;
+    //private Cola<Cliente> ColaDeEspera;
     private int disponibilidad;  // Eliminar la inicialización que depende de sala
     private double promedioCalificaciones;
     private int sumaPuntajes;
@@ -36,7 +36,6 @@ public class Evento implements Comparable<Evento> {
     }
 
     public Evento() {
-        // Necesario para crear objetos temporales en búsquedas
     }
 
     public double getPromedioCalificaciones() {

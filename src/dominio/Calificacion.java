@@ -9,6 +9,7 @@ package dominio;
  * @author nicoc
  */
 public class Calificacion implements Comparable<Calificacion> {
+
     private Cliente cliente;
     private int puntaje;
     private String comentario;
@@ -30,7 +31,6 @@ public class Calificacion implements Comparable<Calificacion> {
 //        this.puntaje = puntaje;
 //        this.comentario = comentario;
 //    }
-
     public Cliente getCliente() {
         return cliente;
     }
