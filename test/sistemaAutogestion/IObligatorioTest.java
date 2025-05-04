@@ -91,25 +91,24 @@ public class IObligatorioTest {
     public void testRegistrarEvento() {
         Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
         assertEquals(Retorno.Resultado.OK, resultado.resultado);
-        
-        Retorno r = miSistema.registrarSala("Sala Norte",100);
-        
-        
+
+        Retorno r = miSistema.registrarSala("Sala Norte", 100);
+
         LocalDate fecha = LocalDate.parse("2025-05-03");
         Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
 
         assertEquals(Retorno.Resultado.OK, resultado2.resultado);
 
     }
+
     @Test
     public void testRegistrarEventoError1() {
         Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
         assertEquals(Retorno.Resultado.OK, resultado.resultado);
-        
-        Retorno r = miSistema.registrarSala("Sala Norte",100);
-        Retorno r2 = miSistema.registrarSala("Sala Sur",200);
-        
-        
+
+        Retorno r = miSistema.registrarSala("Sala Norte", 100);
+        Retorno r2 = miSistema.registrarSala("Sala Sur", 200);
+
         LocalDate fecha = LocalDate.parse("2025-05-03");
         Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
         Retorno resultado3 = miSistema.registrarEvento("Evento 1", "Concierto", 100, fecha);
@@ -117,32 +116,30 @@ public class IObligatorioTest {
         assertEquals(Retorno.Resultado.ERROR_1, resultado3.resultado);
 
     }
-    
-        @Test
+
+    @Test
     public void testRegistrarEventoError2() {
         Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
         assertEquals(Retorno.Resultado.OK, resultado.resultado);
-        
-        Retorno r = miSistema.registrarSala("Sala Norte",100);
-        Retorno r2 = miSistema.registrarSala("Sala Sur",200);
-        
-        
+
+        Retorno r = miSistema.registrarSala("Sala Norte", 100);
+        Retorno r2 = miSistema.registrarSala("Sala Sur", 200);
+
         LocalDate fecha = LocalDate.parse("2025-05-03");
         Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 0, fecha);
 
         assertEquals(Retorno.Resultado.ERROR_2, resultado2.resultado);
 
     }
-    
+
     @Test
     public void testRegistrarEventoError3() {
         Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
         assertEquals(Retorno.Resultado.OK, resultado.resultado);
-        
-        Retorno r = miSistema.registrarSala("Sala Norte",100);
-        Retorno r2 = miSistema.registrarSala("Sala Sur",200);
-        
-        
+
+        Retorno r = miSistema.registrarSala("Sala Norte", 100);
+        Retorno r2 = miSistema.registrarSala("Sala Sur", 200);
+
         LocalDate fecha = LocalDate.parse("2025-05-03");
         Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 20, fecha);
         Retorno resultado3 = miSistema.registrarEvento("Evento 2", "Concierto", 20, fecha);
@@ -181,12 +178,39 @@ public class IObligatorioTest {
 
     @Test
     public void testListarSalas() {
-        //Completar para primera entrega
+        miSistema.registrarSala("Sala Verde", 45);
+        miSistema.registrarSala("Sala Azul", 20);
+        miSistema.registrarSala("Sala Violeta", 67);
+
+        Retorno ret = miSistema.listarSalas();
+
+        assertEquals(Retorno.Resultado.OK, ret.resultado);
+
+        String esperado = "Sala Violeta-67#Sala Azul-20#Sala Verde-45";
+        assertEquals(esperado, ret.valorString);
     }
 
     @Test
     public void testListarEventos() {
-        //Completar para primera entrega
+        // Primero registramos las salas necesarias
+        miSistema.registrarSala("Sala Azul", 20);
+        miSistema.registrarSala("Sala Violeta", 67);
+        miSistema.registrarSala("Sala Verde", 45);
+
+        // Registramos eventos (en desorden para verificar ordenación por código)
+        miSistema.registrarEvento("TEC43", "Seminario de Tecnología", 45, LocalDate.of(2025, 5, 10));
+        miSistema.registrarEvento("CUC22", "Tango Azul", 20, LocalDate.of(2025, 5, 11));
+        miSistema.registrarEvento("KAK34", "Noche de Rock", 30, LocalDate.of(2025, 5, 12));
+
+        // Ejecutamos el método a testear
+        Retorno ret = miSistema.listarEventos();
+
+        // Validamos resultado OK
+        assertEquals(Retorno.Resultado.OK, ret.resultado);
+
+        // Y el string generado debe estar ordenado por código
+        String esperado = "CUC22-Tango Azul-20-20-0#KAK34-Noche de Rock-45-45-0#TEC43-Seminario de Tecnología-45-45-0";
+        assertEquals(esperado, ret.valorString);
     }
 
     @Test

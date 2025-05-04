@@ -17,21 +17,19 @@ public class Sala implements Comparable<Sala> {
 
     private String nombre;
     private int capacidad;
-    private ListaSE<LocalDate>fechasOcupada;
+    private ListaSE<LocalDate> fechasOcupada;
 
     public boolean estaOcupada(LocalDate fecha) {
-    Nodo<LocalDate> actual = fechasOcupada.getInicio();
-    while (actual != null) {
-        LocalDate fechaNodo = actual.getDato();
-        if (fechaNodo.equals(fecha)) {
-            return true;
+        Nodo<LocalDate> actual = fechasOcupada.getInicio();
+        while (actual != null) {
+            LocalDate fechaNodo = actual.getDato();
+            if (fechaNodo.equals(fecha)) {
+                return true;
+            }
+            actual = actual.getSiguiente();
         }
-        actual = actual.getSiguiente();
+        return false;
     }
-    return false;
-    }   
-
-
 
     public ListaSE<LocalDate> getFechasOcupada() {
         return fechasOcupada;
@@ -40,7 +38,6 @@ public class Sala implements Comparable<Sala> {
     public void setFechasOcupada(ListaSE<LocalDate> fechasOcupada) {
         this.fechasOcupada = fechasOcupada;
     }
-
 
     public Sala(String nom, int cap) {
         nombre = nom;
@@ -67,7 +64,7 @@ public class Sala implements Comparable<Sala> {
     @Override
     public int compareTo(Sala otraSala) {
         // Comparar alfabéticamente por el nombre
-        return this.nombre.compareTo(otraSala.nombre);
+        return Integer.compare(this.capacidad, otraSala.capacidad);
     }
 
     @Override

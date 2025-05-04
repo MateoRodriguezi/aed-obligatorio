@@ -78,7 +78,16 @@ public class Sistema implements IObligatorio {
             return Retorno.error2();
         }
 
-        Nodo<Sala> actual = listaSalas.getInicio();
+        // Creamos una copia ordenada por capacidad (de menor a mayor)
+        ListaSE<Sala> salasOrdenadas = new ListaSE<>();
+        Nodo<Sala> aux = listaSalas.getInicio();
+        while (aux != null) {
+            salasOrdenadas.insertarOrdenado(aux.getDato()); // usa compareTo en Sala
+            aux = aux.getSiguiente();
+        }
+
+        // Buscamos la primera sala adecuada
+        Nodo<Sala> actual = salasOrdenadas.getInicio();
         Sala salaAsignada = null;
 
         while (actual != null && salaAsignada == null) {
@@ -88,8 +97,9 @@ public class Sistema implements IObligatorio {
             }
             actual = actual.getSiguiente();
         }
+
         if (salaAsignada == null) {
-        return Retorno.error3(); // No hay salas disponibles con aforo 
+            return Retorno.error3(); // No hay salas disponibles con aforo 
         }
 
         // Crear evento nuevo
@@ -158,28 +168,24 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno calificarEvento(String cedula, String codigoEvento, int puntaje, String comentario) {
-        if (puntaje > 10 || puntaje < 1)
-        {
+        if (puntaje > 10 || puntaje < 1) {
             return Retorno.error3();
         }
         Cliente c = new Cliente();
         c.setCedula(cedula);
-        if (listaClientes.obtenerElemento(c) == null)
-        {
+        if (listaClientes.obtenerElemento(c) == null) {
             return Retorno.error1();
         }
-        
+
         Evento e = new Evento();
         e.setCodigo(codigoEvento);
-        if(listaEventos.obtenerElemento(e) == null)
-        {
+        if (listaEventos.obtenerElemento(e) == null) {
             return Retorno.error2();
         }
-        
+
         Nodo<Calificacion> actual = e.getCalificaciones().getInicio();
         while (actual != null) {
-            if (actual.getDato().getCliente().equals(c))
-            {
+            if (actual.getDato().getCliente().equals(c)) {
                 return Retorno.error4();
             }
             actual = actual.getSiguiente();
@@ -195,43 +201,50 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno listarSalas() {
-        return Retorno.noImplementada();
+        // Lista auxiliar para invertir orden
+        ListaSE<Sala> salasInvertidas = new ListaSE<>();
+
+        Nodo<Sala> actual = listaSalas.getInicio();
+
+        // Recorro la lista original y agrego cada sala al inicio de la nueva lista auxiliar
+        while (actual != null) {
+            salasInvertidas.agregarInicio(actual.getDato());
+            actual = actual.getSiguiente();
+        }
+
+        // Ahora construimos el string con formato "nombre-capacidad#..."
+        StringBuilder resultado = new StringBuilder();
+        Nodo<Sala> nodo = salasInvertidas.getInicio();
+
+        while (nodo != null) {
+            Sala sala = nodo.getDato();
+            resultado.append(sala.getNombre()).append("-").append(sala.getCapacidad());
+
+            if (nodo.getSiguiente() != null) {
+                resultado.append("#");
+            }
+
+            nodo = nodo.getSiguiente();
+        }
+
+        // Retornamos el resultado
+        Retorno ret = Retorno.ok();
+        ret.valorString = resultado.toString();
+        return ret;
     }
 
     @Override
     public Retorno listarEventos() {
-        // Creamos una lista auxiliar para guardar los eventos ordenados por código
-        ListaSE<Evento> listaOrdenada = new ListaSE<>();
+        ListaSE<Evento> eventosOrdenados = new ListaSE<>();
 
-        // Recorremos la lista original de eventos
         Nodo<Evento> actual = listaEventos.getInicio();
         while (actual != null) {
-            // Agrego cada evento en la lista ordenada ( uso el compareTo del Evento)
-            listaOrdenada.insertarOrdenado(actual.getDato());
+            eventosOrdenados.insertarOrdenado(actual.getDato());
             actual = actual.getSiguiente();
         }
 
-        // Use el StringBuilder para construir el output del string
-        StringBuilder reporte = new StringBuilder();
-        Nodo<Evento> nodo = listaOrdenada.getInicio();
-
-        // Recorro la lista ordenada de eventos
-        while (nodo != null) {
-            // Voy agregando la información del evento usando su toString()
-            reporte.append(nodo.getDato().toString());
-
-            // Si no es el último evento, agrego el separador #
-            if (nodo.getSiguiente() != null) {
-                reporte.append("#");
-            }
-
-            // Avanzo al siguiente nodo
-            nodo = nodo.getSiguiente();
-        }
-
-        // Creamos el retorno con estado OK y el valorString con el reporte generado
         Retorno ret = Retorno.ok();
-        ret.valorString = reporte.toString();
+        ret.valorString = eventosOrdenados.mostrar();
         return ret;
     }
 

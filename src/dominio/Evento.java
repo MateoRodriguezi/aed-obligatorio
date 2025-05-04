@@ -13,8 +13,6 @@ import tads.ListaSE;
  */
 public class Evento implements Comparable<Evento> {
 
-
-
     private String codigo;
     private String descripcion;
     private int aforoNecesario;
@@ -80,11 +78,16 @@ public class Evento implements Comparable<Evento> {
         this.sala = sala;
     }
 
+    public void actualizarPromedio(Calificacion c) {
+        this.sumaPuntajes += c.getPuntaje();
+        this.cantidadPuntajes++;
+        this.promedioCalificaciones = (double) sumaPuntajes / cantidadPuntajes;
+    }
+
     @Override
     public int compareTo(Evento otroEvento) {
         return this.codigo.compareTo(otroEvento.codigo);
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -96,14 +99,17 @@ public class Evento implements Comparable<Evento> {
 
     @Override
     public String toString() {
-        return codigo + "-" + descripcion + "-" + aforoNecesario + "-"
-                + sala.getCapacidad() + "-" + aforoNecesario;
+        int vendidas = 0;
+        if (entradasvendidas != null) {
+            vendidas = entradasvendidas.cantidadElementos();
+        }
+
+        int disponibles = sala.getCapacidad() - vendidas;
+
+        return codigo + "-" + descripcion + "-"
+                + sala.getCapacidad() + "-"
+                + disponibles + "-"
+                + vendidas;
     }
-    
-    public void actualizarPromedio(Calificacion c) {
-        this.sumaPuntajes += c.getPuntaje();
-        this.cantidadPuntajes++;
-        this.promedioCalificaciones = (double) sumaPuntajes / cantidadPuntajes;
-}
 
 }
