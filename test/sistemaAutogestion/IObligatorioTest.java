@@ -4,6 +4,7 @@
  */
 package sistemaAutogestion;
 
+import java.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -88,7 +89,67 @@ public class IObligatorioTest {
     // Este falta completarlo en sistema y en test
     @Test
     public void testRegistrarEvento() {
-        //Completar para primera entrega
+        Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
+        assertEquals(Retorno.Resultado.OK, resultado.resultado);
+        
+        Retorno r = miSistema.registrarSala("Sala Norte",100);
+        
+        
+        LocalDate fecha = LocalDate.parse("2025-05-03");
+        Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
+
+        assertEquals(Retorno.Resultado.OK, resultado2.resultado);
+
+    }
+    @Test
+    public void testRegistrarEventoError1() {
+        Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
+        assertEquals(Retorno.Resultado.OK, resultado.resultado);
+        
+        Retorno r = miSistema.registrarSala("Sala Norte",100);
+        Retorno r2 = miSistema.registrarSala("Sala Sur",200);
+        
+        
+        LocalDate fecha = LocalDate.parse("2025-05-03");
+        Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
+        Retorno resultado3 = miSistema.registrarEvento("Evento 1", "Concierto", 100, fecha);
+
+        assertEquals(Retorno.Resultado.ERROR_1, resultado3.resultado);
+
+    }
+    
+        @Test
+    public void testRegistrarEventoError2() {
+        Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
+        assertEquals(Retorno.Resultado.OK, resultado.resultado);
+        
+        Retorno r = miSistema.registrarSala("Sala Norte",100);
+        Retorno r2 = miSistema.registrarSala("Sala Sur",200);
+        
+        
+        LocalDate fecha = LocalDate.parse("2025-05-03");
+        Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 0, fecha);
+
+        assertEquals(Retorno.Resultado.ERROR_2, resultado2.resultado);
+
+    }
+    
+    @Test
+    public void testRegistrarEventoError3() {
+        Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
+        assertEquals(Retorno.Resultado.OK, resultado.resultado);
+        
+        Retorno r = miSistema.registrarSala("Sala Norte",100);
+        Retorno r2 = miSistema.registrarSala("Sala Sur",200);
+        
+        
+        LocalDate fecha = LocalDate.parse("2025-05-03");
+        Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 20, fecha);
+        Retorno resultado3 = miSistema.registrarEvento("Evento 2", "Concierto", 20, fecha);
+        Retorno resultado4 = miSistema.registrarEvento("Evento 3", "Expo", 20, fecha);
+
+        assertEquals(Retorno.Resultado.ERROR_3, resultado4.resultado);
+
     }
 
     // Requerimiento 1.5

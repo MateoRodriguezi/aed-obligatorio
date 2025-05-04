@@ -4,6 +4,11 @@
  */
 package dominio;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import tads.ListaSE;
+import tads.Nodo;
+
 /**
  *
  * @author mateorodriguez
@@ -12,10 +17,35 @@ public class Sala implements Comparable<Sala> {
 
     private String nombre;
     private int capacidad;
+    private ListaSE<LocalDate>fechasOcupada;
+
+    public boolean estaOcupada(LocalDate fecha) {
+    Nodo<LocalDate> actual = fechasOcupada.getInicio();
+    while (actual != null) {
+        LocalDate fechaNodo = actual.getDato();
+        if (fechaNodo.equals(fecha)) {
+            return true;
+        }
+        actual = actual.getSiguiente();
+    }
+    return false;
+    }   
+
+
+
+    public ListaSE<LocalDate> getFechasOcupada() {
+        return fechasOcupada;
+    }
+
+    public void setFechasOcupada(ListaSE<LocalDate> fechasOcupada) {
+        this.fechasOcupada = fechasOcupada;
+    }
+
 
     public Sala(String nom, int cap) {
         nombre = nom;
         capacidad = cap;
+        fechasOcupada = new ListaSE<>();
     }
 
     public String getNombre() {
@@ -51,6 +81,10 @@ public class Sala implements Comparable<Sala> {
     @Override
     public String toString() {
         return nombre + "-" + capacidad;
+    }
+
+    public void ocupar(LocalDate fecha) {
+        fechasOcupada.agregarFinal(fecha);
     }
 
 }

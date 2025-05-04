@@ -13,6 +13,8 @@ import tads.ListaSE;
  */
 public class Evento implements Comparable<Evento> {
 
+
+
     private String codigo;
     private String descripcion;
     private int aforoNecesario;
@@ -20,10 +22,22 @@ public class Evento implements Comparable<Evento> {
     private Sala sala;
     private ListaSE<Entrada> entradasvendidas;
     //private Cola<Cliente> listaDeEspera;
-    private int disponibilidad = sala.getCapacidad();
-    
+    private int disponibilidad;  // Eliminar la inicialización que depende de sala
+    private double promedioCalificaciones;
+    private int sumaPuntajes;
+    private int cantidadPuntajes;
+    private ListaSE<Calificacion> calificaciones = new ListaSE<>();
 
-    public Evento() {
+    public double getPromedioCalificaciones() {
+        return promedioCalificaciones;
+    }
+
+    public int getSumaPuntajes() {
+        return sumaPuntajes;
+    }
+
+    public ListaSE<Calificacion> getCalificaciones() {
+        return calificaciones;
     }
 
     public String getCodigo() {
@@ -85,5 +99,11 @@ public class Evento implements Comparable<Evento> {
         return codigo + "-" + descripcion + "-" + aforoNecesario + "-"
                 + sala.getCapacidad() + "-" + aforoNecesario;
     }
+    
+    public void actualizarPromedio(Calificacion c) {
+        this.sumaPuntajes += c.getPuntaje();
+        this.cantidadPuntajes++;
+        this.promedioCalificaciones = (double) sumaPuntajes / cantidadPuntajes;
+}
 
 }

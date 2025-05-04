@@ -3,6 +3,7 @@ package sistemaAutogestion;
 import dominio.Cliente;
 import dominio.Entrada;
 import dominio.Evento;
+import dominio.Calificacion;
 import dominio.Sala;
 import tads.ListaSE;
 import tads.Cola;
@@ -17,6 +18,7 @@ public class Sistema implements IObligatorio {
     private ListaSE<Cliente> listaClientes;
     private ListaSE<Evento> listaEventos;
     private Pila<Entrada> historialCompras;
+    private ListaSE<Evento> listaEventosCalificados;
 
     @Override
     public Retorno crearSistemaDeGestion() {
@@ -25,6 +27,7 @@ public class Sistema implements IObligatorio {
         listaClientes = new ListaSE<>();
         listaEventos = new ListaSE<>();
         historialCompras = new Pila<>();
+        listaEventosCalificados = new ListaSE<>();
         return Retorno.ok();
     }
 
@@ -75,16 +78,31 @@ public class Sistema implements IObligatorio {
             return Retorno.error2();
         }
 
-        // Falta la logica para el error 3: 3. No hay salas disponibles para esa fecha con aforo suficiente
+        Nodo<Sala> actual = listaSalas.getInicio();
+        Sala salaAsignada = null;
+
+        while (actual != null && salaAsignada == null) {
+            Sala sala = actual.getDato();
+            if (sala.getCapacidad() >= aforoNecesario && !sala.estaOcupada(fecha)) {
+                salaAsignada = sala;
+            }
+            actual = actual.getSiguiente();
+        }
+        if (salaAsignada == null) {
+        return Retorno.error3(); // No hay salas disponibles con aforo 
+        }
+
         // Crear evento nuevo
         Evento nuevoEvento = new Evento();
         nuevoEvento.setCodigo(codigo);
         nuevoEvento.setDescripcion(descripcion);
         nuevoEvento.setAforoNecesario(aforoNecesario);
         nuevoEvento.setFecha(fecha.atStartOfDay());
-//        nuevoEvento.setSala(salaAsignada);
+        nuevoEvento.setSala(salaAsignada);
 
-        listaEventos.agregarFinal(nuevoEvento);
+        listaEventos.insertarOrdenado(nuevoEvento);
+        salaAsignada.ocupar(fecha);
+
         return Retorno.ok();
     }
 
@@ -140,7 +158,39 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno calificarEvento(String cedula, String codigoEvento, int puntaje, String comentario) {
-        return Retorno.noImplementada();
+        if (puntaje > 10 || puntaje < 1)
+        {
+            return Retorno.error3();
+        }
+        Cliente c = new Cliente();
+        c.setCedula(cedula);
+        if (listaClientes.obtenerElemento(c) == null)
+        {
+            return Retorno.error1();
+        }
+        
+        Evento e = new Evento();
+        e.setCodigo(codigoEvento);
+        if(listaEventos.obtenerElemento(e) == null)
+        {
+            return Retorno.error2();
+        }
+        
+        Nodo<Calificacion> actual = e.getCalificaciones().getInicio();
+        while (actual != null) {
+            if (actual.getDato().getCliente().equals(c))
+            {
+                return Retorno.error4();
+            }
+            actual = actual.getSiguiente();
+        }
+        Calificacion cal = new Calificacion();
+        cal.setCliente(c);
+        cal.setComentario(comentario);
+        cal.setPuntaje(puntaje);
+        e.actualizarPromedio(cal);
+        listaEventosCalificados.insertarOrdenado(e);
+        return Retorno.ok();
     }
 
     @Override
