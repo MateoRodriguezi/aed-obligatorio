@@ -5,6 +5,7 @@
 package dominio;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import tads.ListaSE;
 
 /**
@@ -25,6 +26,18 @@ public class Evento implements Comparable<Evento> {
     private int sumaPuntajes;
     private int cantidadPuntajes;
     private ListaSE<Calificacion> calificaciones = new ListaSE<>();
+
+    public Evento(String codigo, String descripcion, int aforoNecesario, LocalDate fecha, Sala sala) {
+        this.codigo = codigo;
+        this.descripcion = descripcion;
+        this.aforoNecesario = aforoNecesario;
+        this.fecha = fecha.atStartOfDay();  // lo convertimos a LocalDateTime directamente acá
+        this.sala = sala;
+    }
+
+    public Evento() {
+        // Necesario para crear objetos temporales en búsquedas
+    }
 
     public double getPromedioCalificaciones() {
         return promedioCalificaciones;

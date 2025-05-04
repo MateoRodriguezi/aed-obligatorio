@@ -64,32 +64,28 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno registrarEvento(String codigo, String descripcion, int aforoNecesario, LocalDate fecha) {
-
-        // Verificamos si ya existe un evento con ese código
         Evento eBuscar = new Evento();
         eBuscar.setCodigo(codigo);
 
-        Evento eventoReal = listaEventos.obtenerElemento(eBuscar);
-        if (eventoReal != null) {
-            return Retorno.error1(); // ya existe evento con ese código
+        if (listaEventos.obtenerElemento(eBuscar) != null) {
+            return Retorno.error1(); // Evento ya existe
         }
 
         if (aforoNecesario <= 0) {
             return Retorno.error2();
         }
 
-        // Creamos una copia ordenada por capacidad (de menor a mayor)
+        // Crear copia ordenada por capacidad
         ListaSE<Sala> salasOrdenadas = new ListaSE<>();
         Nodo<Sala> aux = listaSalas.getInicio();
         while (aux != null) {
-            salasOrdenadas.insertarOrdenado(aux.getDato()); // usa compareTo en Sala
+            salasOrdenadas.insertarOrdenado(aux.getDato());
             aux = aux.getSiguiente();
         }
 
-        // Buscamos la primera sala adecuada
+        // Buscar sala adecuada
         Nodo<Sala> actual = salasOrdenadas.getInicio();
         Sala salaAsignada = null;
-
         while (actual != null && salaAsignada == null) {
             Sala sala = actual.getDato();
             if (sala.getCapacidad() >= aforoNecesario && !sala.estaOcupada(fecha)) {
@@ -99,16 +95,11 @@ public class Sistema implements IObligatorio {
         }
 
         if (salaAsignada == null) {
-            return Retorno.error3(); // No hay salas disponibles con aforo 
+            return Retorno.error3(); // No hay sala disponible
         }
 
-        // Crear evento nuevo
-        Evento nuevoEvento = new Evento();
-        nuevoEvento.setCodigo(codigo);
-        nuevoEvento.setDescripcion(descripcion);
-        nuevoEvento.setAforoNecesario(aforoNecesario);
-        nuevoEvento.setFecha(fecha.atStartOfDay());
-        nuevoEvento.setSala(salaAsignada);
+        // Usamos el constructor con parámetros
+        Evento nuevoEvento = new Evento(codigo, descripcion, aforoNecesario, fecha, salaAsignada);
 
         listaEventos.insertarOrdenado(nuevoEvento);
         salaAsignada.ocupar(fecha);
