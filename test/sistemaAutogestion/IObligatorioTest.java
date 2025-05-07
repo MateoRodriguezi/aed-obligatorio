@@ -254,4 +254,28 @@ public class IObligatorioTest {
         assertEquals("Es óptimo", ret.valorString);
     }
 
+    @Test
+    public void testNoEsSalaOptima() {
+        // Matriz del ejemplo del  obligatorio
+        String[][] vista = {
+            {"#", "#", "#", "#", "#", "#", "#"},
+            {"#", "#", "X", "X", "X", "X", "#"},
+            {"#", "O", "O", "X", "X", "X", "#"},
+            {"#", "O", "O", "O", "O", "X", "#"},
+            {"#", "O", "O", "X", "X", "O", "#"},
+            {"#", "O", "O", "O", "X", "O", "#"},
+            {"#", "X", "X", "X", "O", "O", "#"},
+            {"#", "X", "X", "O", "O", "O", "#"},
+            {"#", "X", "X", "X", "X", "X", "#"},
+            {"#", "X", "X", "O", "X", "X", "#"},
+            {"#", "#", "#", "X", "#", "#", "#"},
+            {"#", "#", "#", "O", "#", "#", "#"}
+        };
+
+        Retorno ret = miSistema.esSalaOptima(vista);
+
+        assertEquals(Retorno.Resultado.OK, ret.resultado);
+        assertEquals("No es óptimo", ret.valorString);
+    }
+
 }

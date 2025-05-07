@@ -189,23 +189,11 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno listarSalas() {
-        // Invertimos la lista de salas para mostrarlas al revés
         ListaSE<Sala> salasInvertidas = listaSalas.invertir();
 
-        // Armamos el string concatenando toString() de cada sala con #
-        StringBuilder resultado = new StringBuilder();
-        Nodo<Sala> nodo = salasInvertidas.getInicio();
-
-        while (nodo != null) {
-            resultado.append(nodo.getDato().toString());
-            if (nodo.getSiguiente() != null) {
-                resultado.append("#");
-            }
-            nodo = nodo.getSiguiente();
-        }
-
         Retorno ret = Retorno.ok();
-        ret.valorString = resultado.toString();
+        ret.valorString = salasInvertidas.mostrar(); 
+
         return ret;
     }
 
