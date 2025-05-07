@@ -31,6 +31,11 @@ public class Sistema implements IObligatorio {
         return Retorno.ok();
     }
 
+    
+    // Pre-condicion
+    // Post-condicion
+    
+    //Ordenar de entrada - Evitamos el mostrarInvertido por eso agregamos las salas al principio
     @Override
     public Retorno registrarSala(String nombre, int capacidad) {
         if (capacidad <= 0) {
@@ -40,7 +45,7 @@ public class Sistema implements IObligatorio {
         if (listaSalas.obtenerElemento(s) != null) {
             return Retorno.error1(); // Sala existente
         }
-        listaSalas.agregarFinal(s);
+        listaSalas.agregarInicio(s);
         return Retorno.ok();
 
     }
@@ -190,10 +195,9 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno listarSalas() {
-        ListaSE<Sala> salasInvertidas = listaSalas.invertir();
 
         Retorno ret = Retorno.ok();
-        ret.valorString = salasInvertidas.mostrar(); 
+        ret.valorString = listaSalas.mostrar();
 
         return ret;
     }
