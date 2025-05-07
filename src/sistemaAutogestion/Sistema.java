@@ -75,7 +75,8 @@ public class Sistema implements IObligatorio {
             return Retorno.error2();
         }
 
-        // Crear copia ordenada por capacidad
+        // Crear copia ordenada por capacidad para que le de la sala que cumpla 
+        // las condiciones pero con la menor capacidad posible
         ListaSE<Sala> salasOrdenadas = new ListaSE<>();
         Nodo<Sala> aux = listaSalas.getInicio();
         while (aux != null) {
