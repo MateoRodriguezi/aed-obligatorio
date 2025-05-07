@@ -20,6 +20,7 @@ public class Evento implements Comparable<Evento> {
     private LocalDateTime fecha;
     private Sala sala;
     private ListaSE<Entrada> entradasvendidas;
+    private ListaSE<Cliente> listaclientesevento;
     //private Cola<Cliente> ColaDeEspera;
     private int disponibilidad;  // Eliminar la inicialización que depende de sala
     private double promedioCalificaciones;
