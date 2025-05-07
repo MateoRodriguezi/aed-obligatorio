@@ -181,7 +181,7 @@ public class Sistema implements IObligatorio {
             }
             actual = actual.getSiguiente();
         }
-        Calificacion cal = new Calificacion(c,puntaje,comentario);
+        Calificacion cal = new Calificacion(c, puntaje, comentario);
         e.actualizarPromedio(cal);
         listaEventosCalificados.insertarOrdenado(e);
         return Retorno.ok();
@@ -189,33 +189,21 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno listarSalas() {
-        // Lista auxiliar para invertir orden
-        ListaSE<Sala> salasInvertidas = new ListaSE<>();
+        // Invertimos la lista de salas para mostrarlas al revés
+        ListaSE<Sala> salasInvertidas = listaSalas.invertir();
 
-        Nodo<Sala> actual = listaSalas.getInicio();
-
-        // Recorro la lista original y agrego cada sala al inicio de la nueva lista auxiliar
-        while (actual != null) {
-            salasInvertidas.agregarInicio(actual.getDato());
-            actual = actual.getSiguiente();
-        }
-
-        // Ahora construimos el string con formato "nombre-capacidad#..."
+        // Armamos el string concatenando toString() de cada sala con #
         StringBuilder resultado = new StringBuilder();
         Nodo<Sala> nodo = salasInvertidas.getInicio();
 
         while (nodo != null) {
-            Sala sala = nodo.getDato();
-            resultado.append(sala.getNombre()).append("-").append(sala.getCapacidad());
-
+            resultado.append(nodo.getDato().toString());
             if (nodo.getSiguiente() != null) {
                 resultado.append("#");
             }
-
             nodo = nodo.getSiguiente();
         }
 
-        // Retornamos el resultado
         Retorno ret = Retorno.ok();
         ret.valorString = resultado.toString();
         return ret;

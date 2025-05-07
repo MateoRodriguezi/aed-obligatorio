@@ -167,4 +167,17 @@ public class ListaSE<T extends Comparable> implements ILista<T> {
         return size;
     }
 
+    @Override
+    public ListaSE<T> invertir() {
+        ListaSE<T> invertida = new ListaSE<>();
+        Nodo<T> aux = this.inicio;
+
+        while (aux != null) {
+            invertida.agregarInicio(aux.getDato());
+            aux = aux.getSiguiente();
+        }
+
+        return invertida;
+    }
+
 }

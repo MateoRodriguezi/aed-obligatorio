@@ -9,16 +9,16 @@ package tads;
  * @author mateorodriguez
  */
 public interface ILista<T extends Comparable> {
-    
+
     // Retorna true si la lista está vacía, false en caso contrario
     public boolean esVacia();
 
     // Agrega un elemento al inicio de la lista
     public void agregarInicio(T elemento);
-    
+
     // Agrega un elemento al final de la lista
     public void agregarFinal(T elemento);
-    
+
     // Borra el primer elemento de la lista
     public void borrarInicio();
 
@@ -32,10 +32,12 @@ public interface ILista<T extends Comparable> {
     public String mostrar();
 
     public T obtenerElemento(T elemento);
-    
+
     public void insertarOrdenado(T dato);
-    
+
     public void eliminarElemento(T elemento);
-    
+
     public int cantidadElementos();
+
+    public ListaSE<T> invertir();
 }
