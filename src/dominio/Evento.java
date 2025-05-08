@@ -107,7 +107,7 @@ public class Evento implements Comparable<Evento> {
         if (!(obj instanceof Evento)) {
             return false;
         }
-        return this.codigo.equals(((Evento) obj).codigo);
+        return this.codigo.equalsIgnoreCase(((Evento) obj).codigo);
     }
 
     @Override

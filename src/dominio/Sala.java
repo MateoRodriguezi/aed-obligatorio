@@ -72,7 +72,7 @@ public class Sala implements Comparable<Sala> {
         if (!(obj instanceof Sala)) {
             return false;
         }
-        return this.nombre.equals(((Sala) obj).nombre);
+        return this.nombre.equalsIgnoreCase(((Sala) obj).nombre);
     }
 
     @Override

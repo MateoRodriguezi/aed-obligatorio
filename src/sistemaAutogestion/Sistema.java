@@ -20,6 +20,9 @@ public class Sistema implements IObligatorio {
     private Pila<Entrada> historialCompras;
     private ListaSE<Evento> listaEventosCalificados;
 
+    //1.1
+    // Pre-condición: ninguna
+    // Post-condición: se inicializa el sistema con listas vacías de salas, clientes, eventos, compras e historial de eventos calificados
     @Override
     public Retorno crearSistemaDeGestion() {
         // Inicializamos las listas desde cero
@@ -32,9 +35,9 @@ public class Sistema implements IObligatorio {
     }
 
     
-    // Pre-condicion
-    // Post-condicion
-    
+    //1.2
+    // Pre-condición: capacidad > 0, nombre no puede estar repetido ni ser nulo
+    // Post-condición: se registra una nueva sala al inicio de la lista si cumple condiciones
     //Ordenar de entrada - Evitamos el mostrarInvertido por eso agregamos las salas al principio
     @Override
     public Retorno registrarSala(String nombre, int capacidad) {
@@ -49,7 +52,10 @@ public class Sistema implements IObligatorio {
         return Retorno.ok();
 
     }
-
+    
+    //1.3
+    // Pre-condición: nombre no es null ni vacío y debe existir una sala con ese nombre
+    // Post-condición: si existe la sala con ese nombre, se elimina de la lista
     @Override
     public Retorno eliminarSala(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
@@ -67,6 +73,9 @@ public class Sistema implements IObligatorio {
         return Retorno.ok();
     }
 
+    //1.4
+    // Pre-condición: descripción no puede ser null, el código no debe estar repetido ni ser null, el aforo debe ser mayor a 0, debe existir una sala disponible con la capacidad suficiente para la fecha (formato válido)
+    // Post-condición: se registra un nuevo evento ordenado por código y se marca la sala como ocupada en la fecha del evento
     @Override
     public Retorno registrarEvento(String codigo, String descripcion, int aforoNecesario, LocalDate fecha) {
         Evento eBuscar = new Evento();
@@ -112,7 +121,10 @@ public class Sistema implements IObligatorio {
 
         return Retorno.ok();
     }
-
+    
+    //1.5
+    // Pre-condición: la cédula debe tener 8 dígitos, no ser null y no debe estar repetida
+    // Post-condición: se agrega un nuevo cliente al final de la lista
     @Override
     public Retorno registrarCliente(String cedula, String nombre) {
 
@@ -132,7 +144,9 @@ public class Sistema implements IObligatorio {
 
         return Retorno.ok();
     }
-
+    
+    // Pre-condición: el cliente y el evento deben existir.
+    // Post-condición: si hay entradas disponibles, se registra la entrada en el evento y se guarda en el historial; si no, se agrega al cliente a la lista de espera.
     @Override
     public Retorno comprarEntrada(String cedula, String codigoEvento) {
         Cliente clienteBuscar = new Cliente();
@@ -146,23 +160,24 @@ public class Sistema implements IObligatorio {
             return Retorno.error2(); //EVENTO NO EXISTE
         }
 
-        //DECIDIR COMO USAR LA PILA (POR EL REQUERIMIENTO 2.7)
-        //VALIDAR CAPACIDAD DISPONIBLE CON EVENTO.GETDISPONIBILIDAD 
-        //Y SI ES > A 0 SE ASIGNA CLIENTE A ENTRADA Y ENTRADA A EVENTO
-        //EN CASO CONTRARIO SI ASIGNA CLIENTE A LISTA DE ESPERA DEL EVENTO
         return Retorno.ok();
     }
-
+    
+    // Pre-condición: el código del evento debe existir y no ser null
+    // Post-condición: se elimina el evento de la lista
     @Override
     public Retorno eliminarEvento(String codigo) {
         return Retorno.noImplementada();
     }
 
+    
     @Override
     public Retorno devolverEntrada(String cedula, String codigoEvento) {
         return Retorno.noImplementada();
     }
-
+    
+    // Pre-condición: cliente y evento con esa cédula y código deben existir, el puntaje debe estar entre 1 y 10, el comentario no puede ser null y el cliente no debe haber calificado antes ese evento.
+    // Post-condición: se registra la calificación y se actualiza el promedio del evento.
     @Override
     public Retorno calificarEvento(String cedula, String codigoEvento, int puntaje, String comentario) {
         if (puntaje > 10 || puntaje < 1) {
@@ -193,6 +208,9 @@ public class Sistema implements IObligatorio {
         return Retorno.ok();
     }
 
+    //2.1
+    // Pre-condición: ninguna
+    // Post-condición: retorna string con la lista de salas registradas
     @Override
     public Retorno listarSalas() {
 
@@ -202,6 +220,9 @@ public class Sistema implements IObligatorio {
         return ret;
     }
 
+    //2.2
+    // Pre-condición: ninguna
+    // Post-condición: retorna string con los eventos ordenados por código
     @Override
     public Retorno listarEventos() {
         ListaSE<Evento> eventosOrdenados = new ListaSE<>();
@@ -217,6 +238,9 @@ public class Sistema implements IObligatorio {
         return ret;
     }
 
+    //2.3
+    // Pre-condición: ninguna.
+    // Post-condición: retorna string con los clientes ordenados por cédula
     @Override
     public Retorno listarClientes() {
         ListaSE<Cliente> clientesOrdenados = new ListaSE<>();
@@ -232,6 +256,10 @@ public class Sistema implements IObligatorio {
         return ret;
     }
 
+    
+    //2.4
+    // Pre-condición: la matriz de vistaSala debe tener formato válido.
+    // Post-condición: se indica si la sala es óptima según el criterio de columnas con más ocupados consecutivos que libres.
     @Override
     public Retorno esSalaOptima(String[][] vistaSala) {
         // Obtengo la cantidad de columnas y filas de la matriz
