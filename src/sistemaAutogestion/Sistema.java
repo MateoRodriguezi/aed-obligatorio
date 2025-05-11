@@ -34,7 +34,6 @@ public class Sistema implements IObligatorio {
         return Retorno.ok();
     }
 
-    
     //1.2
     // Pre-condición: nombre no puede estar repetido ni ser nulo
     // Post-condición: se registra una nueva sala al inicio de la lista si cumple condiciones
@@ -52,7 +51,7 @@ public class Sistema implements IObligatorio {
         return Retorno.ok();
 
     }
-    
+
     //1.3
     // Pre-condición: nombre no es null ni vacío
     // Post-condición: si existe la sala con ese nombre, se elimina de la lista
@@ -118,7 +117,7 @@ public class Sistema implements IObligatorio {
 
         return Retorno.ok();
     }
-    
+
     //1.5
     // Pre-condición: cedula no ser null
     // Post-condición: se agrega un nuevo cliente al final de la lista
@@ -128,7 +127,6 @@ public class Sistema implements IObligatorio {
     if (cedula.length() != 8 || !cedula.matches("\\d{8}")) {
         return Retorno.error1(); 
     }
-
 
         Cliente clienteBuscar = new Cliente();
         clienteBuscar.setCedula(cedula);
@@ -142,8 +140,9 @@ public class Sistema implements IObligatorio {
 
         return Retorno.ok();
     }
-    
-    // Pre-condición: 
+
+
+    // Pre-condición: el cliente y el evento deben existir.
     // Post-condición: si hay entradas disponibles, se registra la entrada en el evento y se guarda en el historial; si no, se agrega al cliente a la lista de espera.
     @Override
     public Retorno comprarEntrada(String cedula, String codigoEvento) {
@@ -160,7 +159,7 @@ public class Sistema implements IObligatorio {
 
         return Retorno.ok();
     }
-    
+
     // Pre-condición: el código del evento debe existir y no ser null
     // Post-condición: se elimina el evento de la lista
     @Override
@@ -168,12 +167,11 @@ public class Sistema implements IObligatorio {
         return Retorno.noImplementada();
     }
 
-    
     @Override
     public Retorno devolverEntrada(String cedula, String codigoEvento) {
         return Retorno.noImplementada();
     }
-    
+
     // Pre-condición: cliente y evento con esa cédula y código deben existir, el puntaje debe estar entre 1 y 10, el comentario no puede ser null y el cliente no debe haber calificado antes ese evento.
     // Post-condición: se registra la calificación y se actualiza el promedio del evento.
     @Override
@@ -254,7 +252,6 @@ public class Sistema implements IObligatorio {
         return ret;
     }
 
-    
     //2.4
     // Pre-condición: la matriz de vistaSala debe tener formato válido.
     // Post-condición: se indica si la sala es óptima según el criterio de columnas con más ocupados consecutivos que libres.
