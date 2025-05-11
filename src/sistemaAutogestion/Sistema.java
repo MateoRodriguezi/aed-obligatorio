@@ -58,9 +58,6 @@ public class Sistema implements IObligatorio {
     // Post-condición: si existe la sala con ese nombre, se elimina de la lista
     @Override
     public Retorno eliminarSala(String nombre) {
-        if (nombre == null || nombre.trim().isEmpty()) {
-            return Retorno.error1(); // Nombre inválido
-        }
 
         Sala sBuscar = new Sala(nombre, 1); // La capacidad no importa para equals
         Sala salaReal = listaSalas.obtenerElemento(sBuscar);
@@ -74,7 +71,7 @@ public class Sistema implements IObligatorio {
     }
 
     //1.4
-    // Pre-condición: descripción no puede ser null, el código no debe estar repetido ni ser null, el aforo debe ser mayor a 0, debe existir una sala disponible con la capacidad suficiente para la fecha (formato válido)
+    // Pre-condición: descripción no puede ser null, el código no debe ser null
     // Post-condición: se registra un nuevo evento ordenado por código y se marca la sala como ocupada en la fecha del evento
     @Override
     public Retorno registrarEvento(String codigo, String descripcion, int aforoNecesario, LocalDate fecha) {
@@ -123,14 +120,15 @@ public class Sistema implements IObligatorio {
     }
     
     //1.5
-    // Pre-condición: la cédula debe tener 8 dígitos, no ser null y no debe estar repetida
+    // Pre-condición: cedula no ser null
     // Post-condición: se agrega un nuevo cliente al final de la lista
     @Override
     public Retorno registrarCliente(String cedula, String nombre) {
+    
+    if (cedula.length() != 8 || !cedula.matches("\\d{8}")) {
+        return Retorno.error1(); 
+    }
 
-        if (cedula == null || cedula.length() != 8) {
-            return Retorno.error1(); // Formato inválido
-        }
 
         Cliente clienteBuscar = new Cliente();
         clienteBuscar.setCedula(cedula);
@@ -145,7 +143,7 @@ public class Sistema implements IObligatorio {
         return Retorno.ok();
     }
     
-    // Pre-condición: el cliente y el evento deben existir.
+    // Pre-condición: 
     // Post-condición: si hay entradas disponibles, se registra la entrada en el evento y se guarda en el historial; si no, se agrega al cliente a la lista de espera.
     @Override
     public Retorno comprarEntrada(String cedula, String codigoEvento) {
