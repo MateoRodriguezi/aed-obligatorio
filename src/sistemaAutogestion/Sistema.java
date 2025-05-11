@@ -36,7 +36,7 @@ public class Sistema implements IObligatorio {
 
     
     //1.2
-    // Pre-condición: capacidad > 0, nombre no puede estar repetido ni ser nulo
+    // Pre-condición: nombre no puede estar repetido ni ser nulo
     // Post-condición: se registra una nueva sala al inicio de la lista si cumple condiciones
     //Ordenar de entrada - Evitamos el mostrarInvertido por eso agregamos las salas al principio
     @Override
@@ -54,7 +54,7 @@ public class Sistema implements IObligatorio {
     }
     
     //1.3
-    // Pre-condición: nombre no es null ni vacío y debe existir una sala con ese nombre
+    // Pre-condición: nombre no es null ni vacío
     // Post-condición: si existe la sala con ese nombre, se elimina de la lista
     @Override
     public Retorno eliminarSala(String nombre) {

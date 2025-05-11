@@ -442,8 +442,8 @@ public class IObligatorioTest {
         Retorno ret = miSistema.registrarCliente("1234", "Juan Pérez");
         assertEquals(Retorno.Resultado.ERROR_1, ret.resultado);
 
-//	ret = miSistema.registrarCliente("AA345444", "Martina Gutierrez");
-//        assertEquals(Retorno.Resultado.ERROR_1, ret.resultado);
+	ret = miSistema.registrarCliente("AA345444", "Martina Gutierrez");
+        assertEquals(Retorno.Resultado.ERROR_1, ret.resultado);
     }
 
     @Test
