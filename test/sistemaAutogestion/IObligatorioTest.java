@@ -209,11 +209,14 @@ public class IObligatorioTest {
 
     @Test
     public void testRegistrarClienteError1() {
-        Retorno resultado = miSistema.registrarCliente("12345", "Juan"); // menos de 8 dígitos
+        Retorno resultado = miSistema.registrarCliente("12345", "Juan"); 
         assertEquals(Retorno.Resultado.ERROR_1, resultado.resultado);
-        
-        Retorno resultado2 = miSistema.registrarCliente("123451596123", "Pedro"); // más de 8 dígitos
+
+        Retorno resultado2 = miSistema.registrarCliente("123451596123", "Pedro");
         assertEquals(Retorno.Resultado.ERROR_1, resultado2.resultado);
+        
+        Retorno resultado3 = miSistema.registrarCliente("ABCD1234", "Pedro");
+        assertEquals(Retorno.Resultado.ERROR_1, resultado3.resultado);
     }
 
     @Test
