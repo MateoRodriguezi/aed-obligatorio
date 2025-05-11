@@ -373,5 +373,121 @@ public class IObligatorioTest {
         assertEquals(Retorno.Resultado.OK, ret2.resultado);
         assertEquals("No es óptimo", ret2.valorString);
     }
+    
+
+    @Test
+    public void testRegistrarSala() {
+        Retorno ret = miSistema.registrarSala("Sala A", 50);
+        assertEquals(Retorno.Resultado.OK, ret.resultado);
+
+ 	Retorno ret2 = miSistema.registrarSala("Sala B", 10);
+        assertEquals(Retorno.Resultado.OK, ret2.resultado);
+    }
+
+    @Test
+    public void testRegistrarSala_ERROR1() {
+	Retorno ret = miSistema.registrarSala("Sala A", 50);
+        assertEquals(Retorno.Resultado.OK, ret.resultado);
+
+ 	ret = miSistema.registrarSala("Sala B", 10);
+        assertEquals(Retorno.Resultado.OK, ret.resultado);
+
+        ret = miSistema.registrarSala("Sala A", 100);
+        assertEquals(Retorno.Resultado.ERROR_1, ret.resultado);
+    }
+
+    @Test
+    public void testRegistrarSala_ERROR2() {
+
+	Retorno ret = miSistema.registrarSala("Sala A", 50);
+        assertEquals(Retorno.Resultado.OK, ret.resultado);
+
+        Retorno ret2 = miSistema.registrarSala("Sala B", 0);
+        assertEquals(Retorno.Resultado.ERROR_2, ret2.resultado);
+
+	Retorno ret3 = miSistema.registrarSala("Sala B", -10);
+        assertEquals(Retorno.Resultado.ERROR_2, ret3.resultado);
+    }
+
+    @Test
+    public void testEliminarSala() {
+        Retorno ret = miSistema.registrarSala("Sala A", 50);
+        assertEquals(Retorno.Resultado.OK, ret.resultado);
+
+        ret = miSistema.eliminarSala("Sala A");
+        assertEquals(Retorno.Resultado.OK, ret.resultado);
+    }
+
+    @Test
+    public void testRegistrarEvento2() {
+        Retorno ret = miSistema.registrarSala("Sala A", 100);
+	assertEquals(Retorno.Resultado.OK, ret.resultado);
+
+        LocalDate fecha = LocalDate.of(2025, 5, 10);
+        Retorno ret2 = miSistema.registrarEvento("EVT01", "Concierto", 80, fecha);
+        assertEquals(Retorno.Resultado.OK, ret2.resultado);
+    }
+
+    @Test
+    public void testRegistrarCliente() {
+        Retorno ret = miSistema.registrarCliente("12345678", "Juan Pérez");
+        assertEquals(Retorno.Resultado.OK, ret.resultado);
+
+	ret = miSistema.registrarCliente("12345444", "Martina Gutierrez");
+        assertEquals(Retorno.Resultado.OK, ret.resultado);
+    }
+
+    @Test
+    public void testRegistrarCliente_ERROR1() {
+        Retorno ret = miSistema.registrarCliente("1234", "Juan Pérez");
+        assertEquals(Retorno.Resultado.ERROR_1, ret.resultado);
+
+//	ret = miSistema.registrarCliente("AA345444", "Martina Gutierrez");
+//        assertEquals(Retorno.Resultado.ERROR_1, ret.resultado);
+    }
+
+    @Test
+    public void testListarSalas2() {
+        miSistema.registrarSala("Sala A", 50);
+        miSistema.registrarSala("Sala B", 70);
+        miSistema.registrarSala("Sala C", 100);
+        Retorno ret = miSistema.listarSalas();
+        assertEquals(Retorno.Resultado.OK, ret.resultado);
+        assertEquals("Sala C-100#Sala B-70#Sala A-50", ret.valorString);
+    }
+
+    @Test
+    public void testListarClientes() {
+        miSistema.registrarCliente("45678992", "Micaela Ferrez");
+    	miSistema.registrarCliente("23331111", "Martina Rodríguez");
+    	miSistema.registrarCliente("35679992", "Ramiro Perez");
+
+    	Retorno ret = miSistema.listarClientes();
+    	assertEquals(Retorno.Resultado.OK, ret.resultado);
+    	assertEquals("23331111-Martina Rodríguez#35679992-Ramiro Perez#45678992-Micaela Ferrez", ret.valorString);
+    }
+
+    @Test
+    public void testEsSalaOptima2() {
+        String[][] vistaSala = {
+        {"#", "#", "#", "#", "#", "#", "#"},
+        {"#", "#", "X", "X", "X", "X", "#"},
+        {"#", "O", "O", "X", "X", "X", "#"},
+        {"#", "O", "O", "O", "O", "X", "#"},
+        {"#", "O", "O", "X", "O", "O", "#"},
+        {"#", "O", "O", "O", "O", "O", "#"},
+        {"#", "X", "X", "O", "O", "O", "O"},
+        {"#", "X", "X", "O", "O", "O", "X"},
+        {"#", "X", "X", "O", "X", "X", "#"},
+        {"#", "X", "X", "O", "X", "X", "#"},
+        {"#", "#", "#", "O", "#", "#", "#"},
+        {"#", "#", "#", "O", "#", "#", "#"}
+    	};
+
+
+	Retorno ret = miSistema.esSalaOptima(vistaSala);
+    	assertEquals(Retorno.Resultado.OK, ret.resultado);
+    	assertEquals("Es óptimo", ret.valorString);
+    }
 
 }
