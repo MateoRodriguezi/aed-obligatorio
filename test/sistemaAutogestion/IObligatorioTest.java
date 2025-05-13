@@ -38,16 +38,16 @@ public class IObligatorioTest {
     public void testRegistrarSalaOK() {
         Retorno resultado1 = miSistema.registrarSala("Sala Norte", 100);
         assertEquals(Retorno.Resultado.OK, resultado1.resultado);
-        
+
         Retorno resultado2 = miSistema.registrarSala("Sala Este", 500);
         assertEquals(Retorno.Resultado.OK, resultado2.resultado);
-        
+
         Retorno resultado3 = miSistema.registrarSala("Sala Sur", 20);
         assertEquals(Retorno.Resultado.OK, resultado3.resultado);
-        
+
         Retorno resultado4 = miSistema.registrarSala("Sala Oeste", 250);
         assertEquals(Retorno.Resultado.OK, resultado4.resultado);
-        
+
     }
 
     @Test
@@ -58,10 +58,9 @@ public class IObligatorioTest {
 
         Retorno resultado2 = miSistema.registrarSala("Sala Norte", 100);
         assertEquals(Retorno.Resultado.ERROR_1, resultado2.resultado);
-        
+
         Retorno resultado3 = miSistema.registrarSala("Sala norte", 500);
         assertEquals(Retorno.Resultado.ERROR_1, resultado3.resultado);
-        
 
     }
 
@@ -73,7 +72,7 @@ public class IObligatorioTest {
 
         Retorno resultado2 = miSistema.registrarSala("Sala Sur", -100);
         assertEquals(Retorno.Resultado.ERROR_2, resultado2.resultado);
-        
+
         Retorno resultado3 = miSistema.registrarSala("Sala Este", -1);
         assertEquals(Retorno.Resultado.ERROR_2, resultado3.resultado);
 
@@ -88,10 +87,10 @@ public class IObligatorioTest {
 
         Retorno resultado2 = miSistema.eliminarSala("Sala Este");
         assertEquals(Retorno.Resultado.OK, resultado2.resultado);
-        
+
         Retorno resultado3 = miSistema.registrarSala("Sala Norte", 100);
         assertEquals(Retorno.Resultado.OK, resultado3.resultado);
-        
+
         Retorno resultado4 = miSistema.eliminarSala("sala norte");
         assertEquals(Retorno.Resultado.OK, resultado4.resultado);
     }
@@ -165,7 +164,6 @@ public class IObligatorioTest {
         assertEquals(Retorno.Resultado.ERROR_2, resultado2.resultado);
         assertEquals(Retorno.Resultado.ERROR_2, resultado3.resultado);
 
-
     }
 
     @Test
@@ -179,20 +177,20 @@ public class IObligatorioTest {
         assertEquals(Retorno.Resultado.OK, r2.resultado);
 
         LocalDate fecha = LocalDate.parse("2025-05-03");
-        
+
         //Caso NO quedan salas
         Retorno resultado1 = miSistema.registrarEvento("Evento 1", "Carreras F1", 20, fecha);
         Retorno resultado2 = miSistema.registrarEvento("Evento 2", "Concierto", 20, fecha);
         Retorno resultado3 = miSistema.registrarEvento("Evento 3", "Expo", 20, fecha);
 
         assertEquals(Retorno.Resultado.ERROR_3, resultado3.resultado);
-        
+
         Retorno r3 = miSistema.registrarSala("Sala Este", 100);
         assertEquals(Retorno.Resultado.OK, r3.resultado);
         //Caso no alcanza la capacidad
         Retorno resultado4 = miSistema.registrarEvento("Evento 4", "Expo", 200, fecha);
         Retorno resultado5 = miSistema.registrarEvento("Evento 5", "Expo", 101, fecha);
-        
+
         assertEquals(Retorno.Resultado.ERROR_3, resultado4.resultado);
         assertEquals(Retorno.Resultado.ERROR_3, resultado5.resultado);
     }
@@ -209,12 +207,12 @@ public class IObligatorioTest {
 
     @Test
     public void testRegistrarClienteError1() {
-        Retorno resultado = miSistema.registrarCliente("12345", "Juan"); 
+        Retorno resultado = miSistema.registrarCliente("12345", "Juan");
         assertEquals(Retorno.Resultado.ERROR_1, resultado.resultado);
 
         Retorno resultado2 = miSistema.registrarCliente("123451596123", "Pedro");
         assertEquals(Retorno.Resultado.ERROR_1, resultado2.resultado);
-        
+
         Retorno resultado3 = miSistema.registrarCliente("ABCD1234", "Pedro");
         assertEquals(Retorno.Resultado.ERROR_1, resultado3.resultado);
     }
@@ -226,10 +224,10 @@ public class IObligatorioTest {
 
         Retorno resultado2 = miSistema.registrarCliente("12345678", "María");
         assertEquals(Retorno.Resultado.ERROR_2, resultado2.resultado);
-        
-        Retorno resultado3 = miSistema.registrarCliente("87654321", "Pedro"); 
+
+        Retorno resultado3 = miSistema.registrarCliente("87654321", "Pedro");
         assertEquals(Retorno.Resultado.OK, resultado3.resultado);
-        
+
         Retorno resultado4 = miSistema.registrarCliente("87654321", "Mauro");
         assertEquals(Retorno.Resultado.ERROR_2, resultado4.resultado);
     }
@@ -310,7 +308,7 @@ public class IObligatorioTest {
 
         assertEquals(Retorno.Resultado.OK, ret.resultado);
         assertEquals("Es óptimo", ret.valorString);
-        
+
         String[][] vista2 = {
             {"#", "#", "#", "#", "#", "#", "#"},
             {"#", "#", "O", "X", "X", "X", "#"},
@@ -330,7 +328,7 @@ public class IObligatorioTest {
 
         assertEquals(Retorno.Resultado.OK, ret2.resultado);
         assertEquals("Es óptimo", ret2.valorString);
-        
+
     }
 
     @Test
@@ -355,7 +353,7 @@ public class IObligatorioTest {
 
         assertEquals(Retorno.Resultado.OK, ret.resultado);
         assertEquals("No es óptimo", ret.valorString);
-        
+
         String[][] vista2 = {
             {"#", "#", "#", "#", "#", "#", "#"},
             {"#", "#", "O", "X", "X", "X", "#"},
@@ -376,4 +374,19 @@ public class IObligatorioTest {
         assertEquals(Retorno.Resultado.OK, ret2.resultado);
         assertEquals("No es óptimo", ret2.valorString);
     }
+
+@Test
+public void testEliminarSalaRemueveSalaDelListado() {
+    miSistema.registrarSala("Sala Fantasma", 50);
+
+    Retorno listadoAntes = miSistema.listarSalas();
+    System.out.println("ANTES de eliminar: " + listadoAntes.valorString);
+    assertTrue(listadoAntes.valorString.toLowerCase().contains("sala fantasma"));
+
+    miSistema.eliminarSala("Sala Fantasma");
+
+    Retorno listadoDespues = miSistema.listarSalas();
+    System.out.println("DESPUÉS de eliminar: " + listadoDespues.valorString);
+    assertFalse(listadoDespues.valorString.toLowerCase().contains("sala fantasma"));
+}
 }

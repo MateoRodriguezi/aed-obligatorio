@@ -120,22 +120,18 @@ public class ListaSE<T extends Comparable> implements ILista<T> {
 // Nico agregue este metodo a ILista chusmealo y decime que te parece
     @Override
     public void eliminarElemento(T elemento) {
-        //Evaluo el primero 
-
         if (inicio != null) {
-
-            if (inicio.getDato() == elemento) {
+            if (inicio.getDato().equals(elemento)) {
                 inicio = inicio.getSiguiente();
             } else {
                 Nodo actual = inicio;
-                while (actual.getSiguiente() != null && actual.getSiguiente().getDato().equals(elemento)) {
+                while (actual.getSiguiente() != null && !actual.getSiguiente().getDato().equals(elemento)) {
                     actual = actual.getSiguiente();
                 }
                 if (actual.getSiguiente() != null) {
                     Nodo aBorrar = actual.getSiguiente();
                     actual.setSiguiente(aBorrar.getSiguiente());
                     aBorrar.setSiguiente(null);
-
                 }
             }
         }
