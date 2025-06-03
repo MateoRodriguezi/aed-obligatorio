@@ -6,6 +6,7 @@ package dominio;
 
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+import tads.Cola;
 import tads.ListaSE;
 
 /**
@@ -17,11 +18,11 @@ public class Evento implements Comparable<Evento> {
     private String codigo;
     private String descripcion;
     private int aforoNecesario;
-    private LocalDateTime fecha;
+    private LocalDate fecha;
     private Sala sala;
     private ListaSE<Entrada> entradasvendidas;
     private ListaSE<Cliente> listaclientesevento;
-    //private Cola<Cliente> ColaDeEspera;
+    private Cola<Cliente> ColaDeEspera = new Cola();
     private int disponibilidad;  // Eliminar la inicialización que depende de sala
     private double promedioCalificaciones;
     private int sumaPuntajes;
@@ -32,7 +33,7 @@ public class Evento implements Comparable<Evento> {
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.aforoNecesario = aforoNecesario;
-        this.fecha = fecha.atStartOfDay();  // lo convertimos a LocalDateTime directamente acá
+        this.fecha = fecha;
         this.sala = sala;
     }
 
@@ -75,11 +76,11 @@ public class Evento implements Comparable<Evento> {
         this.aforoNecesario = aforoNecesario;
     }
 
-    public LocalDateTime getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDateTime fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
@@ -124,5 +125,19 @@ public class Evento implements Comparable<Evento> {
                 + disponibles + "-"
                 + vendidas;
     }
-
+    
+    public void comprarEntrada(Cliente c)
+    {
+        if(this.sala.getCapacidad() >= this.entradasvendidas.cantidadElementos()){
+//            this.ColaDeEspera.Encolar(c);
+        }else{
+            Entrada e = new Entrada(c,this,LocalDateTime.now(),false);
+            this.entradasvendidas.agregarFinal(e);
+        }
+    }
+    
+    public Boolean tieneEntradasVendidas(){
+        return this.entradasvendidas.cantidadElementos() > 0;
+    }
+    
 }

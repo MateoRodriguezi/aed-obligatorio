@@ -156,7 +156,8 @@ public class Sistema implements IObligatorio {
         if (listaEventos.obtenerElemento(eventoBuscar) == null) {
             return Retorno.error2(); //EVENTO NO EXISTE
         }
-
+        
+        eventoBuscar.comprarEntrada(clienteBuscar);
         return Retorno.ok();
     }
 
@@ -164,7 +165,18 @@ public class Sistema implements IObligatorio {
     // Post-condición: se elimina el evento de la lista
     @Override
     public Retorno eliminarEvento(String codigo) {
-        return Retorno.noImplementada();
+        Evento eventoBuscar = new Evento();
+        eventoBuscar.setCodigo(codigo);
+        if (listaEventos.obtenerElemento(eventoBuscar) == null) {
+            return Retorno.error1(); //EVENTO NO EXISTE
+        }
+
+        if(eventoBuscar.tieneEntradasVendidas()){
+            return Retorno.error2();
+        }
+
+        eventoBuscar.getSala().liberar(eventoBuscar.getFecha());
+        return Retorno.ok();
     }
 
     @Override

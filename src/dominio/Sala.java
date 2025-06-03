@@ -5,7 +5,6 @@
 package dominio;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import tads.ListaSE;
 import tads.Nodo;
 
@@ -84,5 +83,10 @@ public class Sala implements Comparable<Sala> {
     public void ocupar(LocalDate fecha) {
         fechasOcupada.agregarFinal(fecha);
     }
+
+    public void liberar(LocalDate fecha) {
+        this.fechasOcupada.eliminarElemento(fecha);
+    }
+
 
 }

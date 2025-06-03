@@ -16,9 +16,18 @@ public class Entrada implements Comparable<Entrada> {
     private Evento evento;
     private LocalDateTime fechaCompra;
     private int id;
+    private static int contadorId = 0;
     private boolean devuelta;
     private Integer calificacion; // null si no fue calificada
     private String comentario; // null si no hay comentario
+
+    public Entrada(Cliente cliente, Evento evento, LocalDateTime fechaCompra, boolean devuelta) {
+        this.cliente = cliente;
+        this.evento = evento;
+        this.fechaCompra = fechaCompra;
+        this.devuelta = devuelta;
+        id = ++contadorId;
+    }
 
     public int getId() {
         return id;
