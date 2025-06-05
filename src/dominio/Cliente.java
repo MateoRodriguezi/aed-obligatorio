@@ -15,7 +15,7 @@ public class Cliente implements Comparable<Cliente> {
 
     private String cedula;
     private String nombre;
-    private ListaSE<Entrada> entradaComprada;
+    private ListaSE<Entrada> entradasCompradas = new ListaSE();
 
 
 
@@ -39,6 +39,10 @@ public class Cliente implements Comparable<Cliente> {
 
     public String getNombre() {
         return nombre;
+    }
+    
+    public ListaSE<Entrada> getEntradasCompradas() {
+        return entradasCompradas;
     }
 
     public void setNombre(String nombre) {

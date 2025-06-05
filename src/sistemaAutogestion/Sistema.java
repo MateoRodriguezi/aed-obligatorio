@@ -148,12 +148,14 @@ public class Sistema implements IObligatorio {
     public Retorno comprarEntrada(String cedula, String codigoEvento) {
         Cliente clienteBuscar = new Cliente();
         clienteBuscar.setCedula(cedula);
-        if (listaClientes.obtenerElemento(clienteBuscar) == null) {
+        clienteBuscar = listaClientes.obtenerElemento(clienteBuscar);
+        if (clienteBuscar == null) {
             return Retorno.error1(); // Cliente NO existe
         }
         Evento eventoBuscar = new Evento();
         eventoBuscar.setCodigo(codigoEvento);
-        if (listaEventos.obtenerElemento(eventoBuscar) == null) {
+        eventoBuscar = listaEventos.obtenerElemento(eventoBuscar);
+        if (eventoBuscar == null) {
             return Retorno.error2(); //EVENTO NO EXISTE
         }
         
@@ -167,7 +169,8 @@ public class Sistema implements IObligatorio {
     public Retorno eliminarEvento(String codigo) {
         Evento eventoBuscar = new Evento();
         eventoBuscar.setCodigo(codigo);
-        if (listaEventos.obtenerElemento(eventoBuscar) == null) {
+        eventoBuscar = listaEventos.obtenerElemento(eventoBuscar);
+        if (eventoBuscar == null) {
             return Retorno.error1(); //EVENTO NO EXISTE
         }
 
@@ -181,7 +184,19 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno devolverEntrada(String cedula, String codigoEvento) {
-        return Retorno.noImplementada();
+        Cliente clienteBuscar = new Cliente();
+        clienteBuscar.setCedula(cedula);
+        if (listaClientes.obtenerElemento(clienteBuscar) == null) {
+            return Retorno.error1(); // Cliente NO existe
+        }
+        Evento eventoBuscar = new Evento();
+        eventoBuscar.setCodigo(codigoEvento);
+        if (listaEventos.obtenerElemento(eventoBuscar) == null) {
+            return Retorno.error1(); //EVENTO NO EXISTE
+        }
+        
+        eventoBuscar.devolverEntrada(clienteBuscar);
+        return Retorno.ok();
     }
 
     // Pre-condición: cliente y evento con esa cédula y código deben existir, el puntaje debe estar entre 1 y 10, el comentario no puede ser null y el cliente no debe haber calificado antes ese evento.

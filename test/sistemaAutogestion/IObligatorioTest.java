@@ -231,7 +231,98 @@ public class IObligatorioTest {
         Retorno resultado4 = miSistema.registrarCliente("87654321", "Mauro");
         assertEquals(Retorno.Resultado.ERROR_2, resultado4.resultado);
     }
+    
+    @Test
+    public void testComprarEntradaOk() {
+        Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
+        assertEquals(Retorno.Resultado.OK, resultado.resultado);
 
+        Retorno resultado1 = miSistema.registrarSala("Sala Norte", 100);
+        assertEquals(Retorno.Resultado.OK, resultado1.resultado);
+
+        LocalDate fecha = LocalDate.parse("2025-05-03");
+        Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
+        assertEquals(Retorno.Resultado.OK, resultado2.resultado);
+        
+        Retorno resultado3 = miSistema.comprarEntrada("12345678", "Evento 1");
+        assertEquals(Retorno.Resultado.OK, resultado3.resultado);
+
+    }
+    
+    @Test
+    public void testComprarEntradaError1() {
+        Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
+        assertEquals(Retorno.Resultado.OK, resultado.resultado);
+
+        Retorno resultado1 = miSistema.registrarSala("Sala Norte", 100);
+        assertEquals(Retorno.Resultado.OK, resultado1.resultado);
+
+        LocalDate fecha = LocalDate.parse("2025-05-03");
+        Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
+        assertEquals(Retorno.Resultado.OK, resultado2.resultado);
+        
+        Retorno resultado3 = miSistema.comprarEntrada("456789", "Evento 1");
+        assertEquals(Retorno.Resultado.ERROR_1, resultado3.resultado);
+        
+        Retorno resultado4 = miSistema.comprarEntrada("pruebaError1", "Evento 1");
+        assertEquals(Retorno.Resultado.ERROR_1, resultado4.resultado);
+
+    }
+    
+    @Test
+    public void testComprarEntradaError2() {
+        Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
+        assertEquals(Retorno.Resultado.OK, resultado.resultado);
+
+        Retorno resultado1 = miSistema.registrarSala("Sala Norte", 100);
+        assertEquals(Retorno.Resultado.OK, resultado1.resultado);
+
+        LocalDate fecha = LocalDate.parse("2025-05-03");
+        Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
+        assertEquals(Retorno.Resultado.OK, resultado2.resultado);
+        
+        Retorno resultado3 = miSistema.comprarEntrada("12345678", "Evento 12");
+        assertEquals(Retorno.Resultado.ERROR_2, resultado3.resultado);
+        
+        Retorno resultado4 = miSistema.comprarEntrada("12345678", "Evento1");
+        assertEquals(Retorno.Resultado.ERROR_2, resultado4.resultado);
+
+    }
+
+    @Test
+    public void testEliminarEventoOK(){
+        Retorno resultado1 = miSistema.registrarSala("Sala Norte", 100);
+        assertEquals(Retorno.Resultado.OK, resultado1.resultado);
+
+        LocalDate fecha = LocalDate.parse("2025-05-03");
+        Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
+        assertEquals(Retorno.Resultado.OK, resultado2.resultado);
+        
+        Retorno resultado3 = miSistema.eliminarEvento("Evento 1");
+        assertEquals(Retorno.Resultado.OK, resultado3.resultado);
+
+    }
+    
+    @Test
+    public void testEliminarEventoError2(){
+        Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
+        assertEquals(Retorno.Resultado.OK, resultado.resultado);
+
+        Retorno resultado1 = miSistema.registrarSala("Sala Norte", 100);
+        assertEquals(Retorno.Resultado.OK, resultado1.resultado);
+
+        LocalDate fecha = LocalDate.parse("2025-05-03");
+        Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
+        assertEquals(Retorno.Resultado.OK, resultado2.resultado);
+        
+        Retorno resultado3 = miSistema.comprarEntrada("12345678", "Evento 1");
+        assertEquals(Retorno.Resultado.OK, resultado3.resultado);
+        
+        Retorno resultado4 = miSistema.eliminarEvento("Evento 1");
+        assertEquals(Retorno.Resultado.ERROR_2, resultado4.resultado);
+
+    }
+    
     @Test
     public void testListarSalas() {
         miSistema.registrarSala("Sala Verde", 45);
