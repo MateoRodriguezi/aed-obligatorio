@@ -129,7 +129,7 @@ public class Evento implements Comparable<Evento> {
     public void comprarEntrada(Cliente c)
     {
         if(this.sala.getCapacidad() >= this.entradasvendidas.cantidadElementos()){
-//            this.ColaDeEspera.Encolar(c);
+            this.ColaDeEspera.encolar(c);
         }else{
             Entrada e = new Entrada(c,this,LocalDateTime.now(),false);
             this.entradasvendidas.agregarFinal(e);

@@ -8,6 +8,74 @@ package tads;
  *
  * @author mateorodriguez
  */
-public class Cola<T>  implements ICola{
+public class Cola<T extends Comparable<T>> implements ICola<T> {
+
+
+    private Nodo<T> primero = null;
+    private Nodo<T> ultimo = null;
+    private int cantidadElementos;
+    
+    public Cola(){
+        primero = null;
+        ultimo = null;
+        cantidadElementos = 0;
+    }
+    
+    @Override
+    public void encolar(T dato) {
+        Nodo<T> nodo = new Nodo();
+        nodo.setDato(dato);
+        
+        if(esVacia()){
+            primero = nodo;
+            ultimo = nodo;
+        }else{
+            ultimo.setSiguiente(nodo);
+        }
+        cantidadElementos++;
+    }
+
+    @Override
+    public T desEncolar() {
+        if(esVacia()){
+            throw new IllegalStateException("La pila está vacía");
+        }
+        T dato = primero.getDato();
+        primero = primero.getSiguiente();
+        
+        if(primero == null){
+            ultimo = null;
+        }
+        cantidadElementos--;
+        
+        return dato;
+    }
+
+    @Override
+    public T front() {
+        if(esVacia()){
+                    throw new IllegalStateException("La pila está vacía");
+        }
+        return primero.getDato();
+    }
+
+    @Override
+    public boolean esVacia() {
+        return (primero == null && ultimo == null);
+    }
+
+    @Override
+    public int cantidadElementos() {
+        return cantidadElementos;
+    }
+
+    @Override
+    public void mostrar() {
+        Nodo<T> aux = primero;
+        while (aux != null){
+            System.out.println(aux.getDato());
+            aux = aux.getSiguiente();
+        }
+    }
     
 }

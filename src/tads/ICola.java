@@ -8,6 +8,17 @@ package tads;
  *
  * @author mateorodriguez
  */
-public interface ICola {
+public interface ICola<T extends Comparable> {
     
+    public void encolar(T dato);
+    
+    public T desEncolar();
+    
+    public T front();
+    
+    public boolean esVacia();
+    
+    public int cantidadElementos();
+    
+    public void mostrar();
 }
