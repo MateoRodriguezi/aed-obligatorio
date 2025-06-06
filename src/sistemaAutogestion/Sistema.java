@@ -123,10 +123,10 @@ public class Sistema implements IObligatorio {
     // Post-condición: se agrega un nuevo cliente al final de la lista
     @Override
     public Retorno registrarCliente(String cedula, String nombre) {
-    
-    if (cedula.length() != 8 || !cedula.matches("\\d{8}")) {
-        return Retorno.error1(); 
-    }
+
+        if (cedula.length() != 8 || !cedula.matches("\\d{8}")) {
+            return Retorno.error1();
+        }
 
         Cliente clienteBuscar = new Cliente();
         clienteBuscar.setCedula(cedula);
@@ -141,7 +141,7 @@ public class Sistema implements IObligatorio {
         return Retorno.ok();
     }
 
-
+    //1.6
     // Pre-condición: el cliente y el evento deben existir.
     // Post-condición: si hay entradas disponibles, se registra la entrada en el evento y se guarda en el historial; si no, se agrega al cliente a la lista de espera.
     @Override
@@ -158,11 +158,12 @@ public class Sistema implements IObligatorio {
         if (eventoBuscar == null) {
             return Retorno.error2(); //EVENTO NO EXISTE
         }
-        
+
         eventoBuscar.comprarEntrada(clienteBuscar);
         return Retorno.ok();
     }
 
+    //1.7
     // Pre-condición: el código del evento debe existir y no ser null
     // Post-condición: se elimina el evento de la lista
     @Override
@@ -171,34 +172,42 @@ public class Sistema implements IObligatorio {
         eventoBuscar.setCodigo(codigo);
         eventoBuscar = listaEventos.obtenerElemento(eventoBuscar);
         if (eventoBuscar == null) {
-            return Retorno.error1(); //EVENTO NO EXISTE
+            return Retorno.error1();
         }
 
-        if(eventoBuscar.tieneEntradasVendidas()){
+        if (eventoBuscar.tieneEntradasVendidas()) {
             return Retorno.error2();
         }
 
         eventoBuscar.getSala().liberar(eventoBuscar.getFecha());
+        listaEventos.eliminarElemento(eventoBuscar); // Faltaba esto
         return Retorno.ok();
     }
 
+    // 1.8
+    // Pre-condición: el cliente y el evento deben existir en el sistema.
+    // Post-condición: se elimina la entrada del cliente, y si hay clientes en la lista de espera, se le asigna la entrada al primero en la cola.
     @Override
     public Retorno devolverEntrada(String cedula, String codigoEvento) {
         Cliente clienteBuscar = new Cliente();
         clienteBuscar.setCedula(cedula);
-        if (listaClientes.obtenerElemento(clienteBuscar) == null) {
+        clienteBuscar = listaClientes.obtenerElemento(clienteBuscar);
+        if (clienteBuscar == null) {
             return Retorno.error1(); // Cliente NO existe
         }
+
         Evento eventoBuscar = new Evento();
         eventoBuscar.setCodigo(codigoEvento);
-        if (listaEventos.obtenerElemento(eventoBuscar) == null) {
-            return Retorno.error1(); //EVENTO NO EXISTE
+        eventoBuscar = listaEventos.obtenerElemento(eventoBuscar);
+        if (eventoBuscar == null) {
+            return Retorno.error2(); // Evento NO existe
         }
-        
+
         eventoBuscar.devolverEntrada(clienteBuscar);
         return Retorno.ok();
     }
 
+    // 1.9
     // Pre-condición: cliente y evento con esa cédula y código deben existir, el puntaje debe estar entre 1 y 10, el comentario no puede ser null y el cliente no debe haber calificado antes ese evento.
     // Post-condición: se registra la calificación y se actualiza el promedio del evento.
     @Override

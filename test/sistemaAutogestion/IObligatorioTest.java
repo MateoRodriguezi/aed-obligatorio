@@ -231,7 +231,8 @@ public class IObligatorioTest {
         Retorno resultado4 = miSistema.registrarCliente("87654321", "Mauro");
         assertEquals(Retorno.Resultado.ERROR_2, resultado4.resultado);
     }
-    
+
+    // Requerimiento 1.6
     @Test
     public void testComprarEntradaOk() {
         Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
@@ -243,12 +244,12 @@ public class IObligatorioTest {
         LocalDate fecha = LocalDate.parse("2025-05-03");
         Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
         assertEquals(Retorno.Resultado.OK, resultado2.resultado);
-        
+
         Retorno resultado3 = miSistema.comprarEntrada("12345678", "Evento 1");
         assertEquals(Retorno.Resultado.OK, resultado3.resultado);
 
     }
-    
+
     @Test
     public void testComprarEntradaError1() {
         Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
@@ -260,15 +261,15 @@ public class IObligatorioTest {
         LocalDate fecha = LocalDate.parse("2025-05-03");
         Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
         assertEquals(Retorno.Resultado.OK, resultado2.resultado);
-        
+
         Retorno resultado3 = miSistema.comprarEntrada("456789", "Evento 1");
         assertEquals(Retorno.Resultado.ERROR_1, resultado3.resultado);
-        
+
         Retorno resultado4 = miSistema.comprarEntrada("pruebaError1", "Evento 1");
         assertEquals(Retorno.Resultado.ERROR_1, resultado4.resultado);
 
     }
-    
+
     @Test
     public void testComprarEntradaError2() {
         Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
@@ -280,31 +281,38 @@ public class IObligatorioTest {
         LocalDate fecha = LocalDate.parse("2025-05-03");
         Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
         assertEquals(Retorno.Resultado.OK, resultado2.resultado);
-        
+
         Retorno resultado3 = miSistema.comprarEntrada("12345678", "Evento 12");
         assertEquals(Retorno.Resultado.ERROR_2, resultado3.resultado);
-        
+
         Retorno resultado4 = miSistema.comprarEntrada("12345678", "Evento1");
         assertEquals(Retorno.Resultado.ERROR_2, resultado4.resultado);
 
     }
 
+    // Requerimiento 1.7
     @Test
-    public void testEliminarEventoOK(){
+    public void testEliminarEventoOK() {
         Retorno resultado1 = miSistema.registrarSala("Sala Norte", 100);
         assertEquals(Retorno.Resultado.OK, resultado1.resultado);
 
         LocalDate fecha = LocalDate.parse("2025-05-03");
         Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
         assertEquals(Retorno.Resultado.OK, resultado2.resultado);
-        
+
         Retorno resultado3 = miSistema.eliminarEvento("Evento 1");
         assertEquals(Retorno.Resultado.OK, resultado3.resultado);
 
     }
-    
+
     @Test
-    public void testEliminarEventoError2(){
+    public void testEliminarEventoError1() {
+        Retorno resultado = miSistema.eliminarEvento("evento inexistente");
+        assertEquals(Retorno.Resultado.ERROR_1, resultado.resultado);
+    }
+
+    @Test
+    public void testEliminarEventoError2() {
         Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
         assertEquals(Retorno.Resultado.OK, resultado.resultado);
 
@@ -314,15 +322,66 @@ public class IObligatorioTest {
         LocalDate fecha = LocalDate.parse("2025-05-03");
         Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
         assertEquals(Retorno.Resultado.OK, resultado2.resultado);
-        
+
         Retorno resultado3 = miSistema.comprarEntrada("12345678", "Evento 1");
         assertEquals(Retorno.Resultado.OK, resultado3.resultado);
-        
+
         Retorno resultado4 = miSistema.eliminarEvento("Evento 1");
         assertEquals(Retorno.Resultado.ERROR_2, resultado4.resultado);
 
     }
-    
+
+    // Requerimiento 1.8
+    @Test
+    public void testDevolverEntradaOK() {
+        miSistema.registrarCliente("12345678", "Mateo");
+        miSistema.registrarCliente("87654321", "Laura");
+
+        miSistema.registrarSala("Sala Norte", 1);
+        LocalDate fecha = LocalDate.parse("2025-10-10");
+        miSistema.registrarEvento("EVT1", "Evento Test", 1, fecha);
+
+        // Mateo compra la única entrada
+        Retorno r1 = miSistema.comprarEntrada("12345678", "EVT1");
+        assertEquals(Retorno.Resultado.OK, r1.resultado);
+
+        // Laura intenta comprar pero se encola
+        Retorno r2 = miSistema.comprarEntrada("87654321", "EVT1");
+        assertEquals(Retorno.Resultado.OK, r2.resultado);
+
+        // Mateo devuelve la entrada
+        Retorno r3 = miSistema.devolverEntrada("12345678", "EVT1");
+        assertEquals(Retorno.Resultado.OK, r3.resultado);
+
+        // Ahora Laura debería tener la entrada (fue reasignada automáticamente)
+        Retorno r4 = miSistema.devolverEntrada("87654321", "EVT1");
+        assertEquals(Retorno.Resultado.OK, r4.resultado);
+    }
+
+    @Test
+    public void testDevolverEntradaError1() {
+        // No registramos al cliente
+
+        // Registramos evento y sala
+        miSistema.registrarSala("Sala 1", 10);
+        LocalDate fecha = LocalDate.parse("2025-10-10");
+        miSistema.registrarEvento("EVT1", "Evento Test", 5, fecha);
+
+        // Intentamos devolver entrada con cliente no existente
+        Retorno r = miSistema.devolverEntrada("99999999", "EVT1");
+        assertEquals(Retorno.Resultado.ERROR_1, r.resultado);
+    }
+
+    @Test
+    public void testDevolverEntradaError2() {
+        // Registramos cliente pero no el evento
+        miSistema.registrarCliente("12345678", "Mateo");
+
+        // Intentamos devolver entrada para evento inexistente
+        Retorno r = miSistema.devolverEntrada("12345678", "NOEXISTE");
+        assertEquals(Retorno.Resultado.ERROR_2, r.resultado);
+    }
+
     @Test
     public void testListarSalas() {
         miSistema.registrarSala("Sala Verde", 45);
@@ -466,18 +525,18 @@ public class IObligatorioTest {
         assertEquals("No es óptimo", ret2.valorString);
     }
 
-@Test
-public void testEliminarSalaRemueveSalaDelListado() {
-    miSistema.registrarSala("Sala Fantasma", 50);
+    @Test
+    public void testEliminarSalaRemueveSalaDelListado() {
+        miSistema.registrarSala("Sala Fantasma", 50);
 
-    Retorno listadoAntes = miSistema.listarSalas();
-    System.out.println("ANTES de eliminar: " + listadoAntes.valorString);
-    assertTrue(listadoAntes.valorString.toLowerCase().contains("sala fantasma"));
+        Retorno listadoAntes = miSistema.listarSalas();
+        System.out.println("ANTES de eliminar: " + listadoAntes.valorString);
+        assertTrue(listadoAntes.valorString.toLowerCase().contains("sala fantasma"));
 
-    miSistema.eliminarSala("Sala Fantasma");
+        miSistema.eliminarSala("Sala Fantasma");
 
-    Retorno listadoDespues = miSistema.listarSalas();
-    System.out.println("DESPUÉS de eliminar: " + listadoDespues.valorString);
-    assertFalse(listadoDespues.valorString.toLowerCase().contains("sala fantasma"));
-}
+        Retorno listadoDespues = miSistema.listarSalas();
+        System.out.println("DESPUÉS de eliminar: " + listadoDespues.valorString);
+        assertFalse(listadoDespues.valorString.toLowerCase().contains("sala fantasma"));
+    }
 }

@@ -73,6 +73,7 @@ public class Evento implements Comparable<Evento> {
     public Cola<Cliente> getColaDeEspera() {
         return ColaDeEspera;
     }
+
     public String getDescripcion() {
         return descripcion;
     }
@@ -111,6 +112,46 @@ public class Evento implements Comparable<Evento> {
         this.promedioCalificaciones = (double) sumaPuntajes / cantidadPuntajes;
     }
 
+    public void comprarEntrada(Cliente c) {
+        if (this.entradasvendidas.cantidadElementos() < this.sala.getCapacidad()) {
+            // Crear la entrada
+            Entrada e = new Entrada(c, this, LocalDateTime.now(), false);
+
+            // Agregarla al evento
+            this.entradasvendidas.agregarFinal(e);
+            // Agregarla al cliente
+            c.getEntradasCompradas().agregarFinal(e);
+
+        } else {
+            // No hay lugar agregar a lista de espera
+            this.ColaDeEspera.encolar(c);
+        }
+    }
+
+    public Boolean tieneEntradasVendidas() {
+        return this.entradasvendidas.cantidadElementos() > 0;
+    }
+
+    public void devolverEntrada(Cliente c) {
+        Nodo<Entrada> actual = entradasvendidas.getInicio();
+        while (actual != null) {
+            Entrada entradaNodo = actual.getDato();
+            if (c.equals(entradaNodo.getCliente())) {
+                Entrada e = c.getEntradasCompradas().obtenerElemento(entradaNodo);
+                if (e != null) {
+                    e.setDevuelta(true);
+                }
+                entradasvendidas.eliminarElemento(entradaNodo);
+
+            }
+            actual = actual.getSiguiente();
+        }
+        if (ColaDeEspera.cantidadElementos() > 0) {
+            Entrada e = new Entrada(ColaDeEspera.desEncolar(), this, LocalDateTime.now(), false);
+            this.entradasvendidas.agregarFinal(e);
+        }
+    }
+
     @Override
     public int compareTo(Evento otroEvento) {
         return this.codigo.compareTo(otroEvento.codigo);
@@ -138,40 +179,4 @@ public class Evento implements Comparable<Evento> {
                 + disponibles + "-"
                 + vendidas;
     }
-    
-    public void comprarEntrada(Cliente c)
-    {
-        if(this.sala.getCapacidad() >= this.entradasvendidas.cantidadElementos()){
-            Entrada e = new Entrada(c,this,LocalDateTime.now(),false);
-            this.entradasvendidas.agregarFinal(e);
-        }else{
-
-            this.ColaDeEspera.encolar(c);
-        }
-    }
-    
-    public Boolean tieneEntradasVendidas(){
-        return this.entradasvendidas.cantidadElementos() > 0;
-    }
-    
-    public void devolverEntrada(Cliente c){
-        Nodo<Entrada> actual = entradasvendidas.getInicio();
-        while (actual != null) {
-            Entrada entradaNodo = actual.getDato();
-            if (c.equals(entradaNodo.getCliente())) {
-                Entrada e = c.getEntradasCompradas().obtenerElemento(entradaNodo);
-                if(e != null){
-                    e.setDevuelta(true);
-                }
-                entradasvendidas.eliminarElemento(entradaNodo);
-                
-            }
-            actual = actual.getSiguiente();
-        }
-        if(ColaDeEspera.cantidadElementos() > 0){
-            Entrada e = new Entrada(ColaDeEspera.desEncolar(),this,LocalDateTime.now(),false);
-            this.entradasvendidas.agregarFinal(e);
-        }
-    }
-    
 }
