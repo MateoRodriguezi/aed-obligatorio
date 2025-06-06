@@ -381,7 +381,74 @@ public class IObligatorioTest {
         Retorno r = miSistema.devolverEntrada("12345678", "NOEXISTE");
         assertEquals(Retorno.Resultado.ERROR_2, r.resultado);
     }
+    
+    
+//    -----------
 
+
+    @Test
+    public void testCalificarEventoError1() {
+        miSistema.registrarSala("Sala 1", 50);
+        LocalDate fecha = LocalDate.parse("2025-10-10");
+        miSistema.registrarEvento("EVT1", "Evento Test", 10, fecha);
+
+        Retorno r = miSistema.calificarEvento("12345678", "EVT1", 8, "Muy bueno");
+        assertEquals(Retorno.Resultado.ERROR_1, r.resultado);
+    }
+
+    @Test
+    public void testCalificarEventoError2() {
+        miSistema.registrarCliente("12345678", "Mateo");
+
+        Retorno r = miSistema.calificarEvento("12345678", "NOEXISTE", 7, "Estuvo bien");
+        assertEquals(Retorno.Resultado.ERROR_2, r.resultado);
+    }
+
+    @Test
+    public void testCalificarEventoError3() {
+        miSistema.registrarCliente("12345678", "Mateo");
+        miSistema.registrarSala("Sala 1", 30);
+        LocalDate fecha = LocalDate.parse("2025-10-10");
+        miSistema.registrarEvento("EVT1", "Evento Test", 10, fecha);
+
+        // Puntaje menor a 1
+        Retorno r1 = miSistema.calificarEvento("12345678", "EVT1", 0, "Malo");
+        assertEquals(Retorno.Resultado.ERROR_3, r1.resultado);
+
+        // Puntaje mayor a 10
+        Retorno r2 = miSistema.calificarEvento("12345678", "EVT1", 11, "Excelente");
+        assertEquals(Retorno.Resultado.ERROR_3, r2.resultado);
+    }
+
+    @Test
+    public void testCalificarEventoError4() {
+        miSistema.registrarCliente("12345678", "Mateo");
+        miSistema.registrarSala("Sala 1", 30);
+        LocalDate fecha = LocalDate.parse("2025-10-10");
+        miSistema.registrarEvento("EVT1", "Evento Test", 10, fecha);
+
+        // Califica por primera vez
+        Retorno r1 = miSistema.calificarEvento("12345678", "EVT1", 9, "Muy bueno");
+        assertEquals(Retorno.Resultado.OK, r1.resultado);
+
+        // Intenta volver a calificar
+        Retorno r2 = miSistema.calificarEvento("12345678", "EVT1", 6, "Cambio de opinión");
+        assertEquals(Retorno.Resultado.ERROR_4, r2.resultado);
+    }
+
+    @Test
+    public void testCalificarEventoOK() {
+        miSistema.registrarCliente("12345678", "Mateo");
+        miSistema.registrarSala("Sala 1", 30);
+        LocalDate fecha = LocalDate.parse("2025-10-10");
+        miSistema.registrarEvento("EVT1", "Evento Test", 10, fecha);
+
+        Retorno r = miSistema.calificarEvento("12345678", "EVT1", 8, "Estuvo excelente");
+        assertEquals(Retorno.Resultado.OK, r.resultado);
+    }
+
+//    -----------
+    
     @Test
     public void testListarSalas() {
         miSistema.registrarSala("Sala Verde", 45);

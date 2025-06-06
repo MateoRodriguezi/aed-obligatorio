@@ -223,6 +223,7 @@ public class Sistema implements IObligatorio {
 
         Evento e = new Evento();
         e.setCodigo(codigoEvento);
+        e = listaEventos.obtenerElemento(e); // recupero el objeto
         if (listaEventos.obtenerElemento(e) == null) {
             return Retorno.error2();
         }
@@ -236,6 +237,7 @@ public class Sistema implements IObligatorio {
         }
         Calificacion cal = new Calificacion(c, puntaje, comentario);
         e.actualizarPromedio(cal);
+        e.getCalificaciones().agregarFinal(cal);  // faltaba agregarla a la lista
         listaEventosCalificados.insertarOrdenado(e);
         return Retorno.ok();
     }
