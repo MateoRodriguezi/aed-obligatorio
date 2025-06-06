@@ -224,7 +224,7 @@ public class Sistema implements IObligatorio {
         Evento e = new Evento();
         e.setCodigo(codigoEvento);
         e = listaEventos.obtenerElemento(e); // recupero el objeto
-        if (listaEventos.obtenerElemento(e) == null) {
+        if (e == null) {
             return Retorno.error2();
         }
 
@@ -344,8 +344,22 @@ public class Sistema implements IObligatorio {
     }
 
     @Override
-    public Retorno listarClientesDeEvento(String código, int n) {
-        return Retorno.noImplementada();
+    public Retorno listarClientesDeEvento(String codigo, int n) {
+        ListaSE<Cliente> clientes = new ListaSE();
+
+        if(n < 1){
+            return Retorno.error2();
+        }
+        Evento eventoBuscar = new Evento();
+        eventoBuscar.setCodigo(codigo);
+        eventoBuscar = listaEventos.obtenerElemento(eventoBuscar);
+        if(eventoBuscar == null){
+            return Retorno.error1();
+        }
+        Retorno ret = Retorno.ok();
+        clientes = eventoBuscar.listarClientes(n);
+        ret.valorString = clientes.mostrar();
+        return ret;
     }
 
     @Override

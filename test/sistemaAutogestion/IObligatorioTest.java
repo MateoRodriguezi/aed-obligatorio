@@ -356,6 +356,8 @@ public class IObligatorioTest {
         // Ahora Laura debería tener la entrada (fue reasignada automáticamente)
         Retorno r4 = miSistema.devolverEntrada("87654321", "EVT1");
         assertEquals(Retorno.Resultado.OK, r4.resultado);
+        
+        
     }
 
     @Test
@@ -592,6 +594,53 @@ public class IObligatorioTest {
         assertEquals("No es óptimo", ret2.valorString);
     }
 
+    @Test
+    public void testListarClientesDeEventoOk() {
+        Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
+        assertEquals(Retorno.Resultado.OK, resultado.resultado);
+        miSistema.registrarCliente("12345679", "Mateo");
+
+        Retorno resultado1 = miSistema.registrarSala("Sala Norte", 100);
+        assertEquals(Retorno.Resultado.OK, resultado1.resultado);
+
+        LocalDate fecha = LocalDate.parse("2025-05-03");
+        Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
+        assertEquals(Retorno.Resultado.OK, resultado2.resultado);
+
+        Retorno resultado3 = miSistema.comprarEntrada("12345678", "Evento 1");
+        assertEquals(Retorno.Resultado.OK, resultado3.resultado);
+        
+        Retorno resultado4 = miSistema.comprarEntrada("12345679", "Evento 1");
+        assertEquals(Retorno.Resultado.OK, resultado4.resultado);
+        
+        Retorno resultado5 = miSistema.listarClientesDeEvento("Evento 1", 2);
+        String esperado = "12345679-Mateo#12345678-Nicolas";
+        assertEquals(esperado, resultado5.valorString);
+    }
+    
+    @Test
+    public void testListarClientesDeEventoError1() {
+    Retorno r = miSistema.listarClientesDeEvento("NoExiste", 6);
+    assertEquals(Retorno.Resultado.ERROR_1, r.resultado);
+
+    }
+    
+    @Test
+    public void testListarClientesDeEventoError2() {
+        Retorno resultado1 = miSistema.registrarSala("Sala Norte", 100);
+        assertEquals(Retorno.Resultado.OK, resultado1.resultado);
+
+        LocalDate fecha = LocalDate.parse("2025-05-03");
+        Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
+        assertEquals(Retorno.Resultado.OK, resultado2.resultado);
+        
+        Retorno resultado3 = miSistema.listarClientesDeEvento("Evento 1", 0);
+        assertEquals(Retorno.Resultado.ERROR_2, resultado3.resultado);
+        
+        Retorno resultado4 = miSistema.listarClientesDeEvento("Evento 1", -1);
+        assertEquals(Retorno.Resultado.ERROR_2, resultado4.resultado);
+    }
+    
     @Test
     public void testEliminarSalaRemueveSalaDelListado() {
         miSistema.registrarSala("Sala Fantasma", 50);

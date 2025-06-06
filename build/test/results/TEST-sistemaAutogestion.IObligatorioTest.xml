@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="0" hostname="UY-IT04133" name="sistemaAutogestion.IObligatorioTest" skipped="0" tests="24" time="0.169" timestamp="2025-06-05T23:19:29">
+<testsuite errors="0" failures="0" hostname="UY-IT04133" name="sistemaAutogestion.IObligatorioTest" skipped="0" tests="36" time="0.225" timestamp="2025-06-06T13:44:58">
   <properties>
     <property name="javac.test.classpath" value=":build/classes:C:\Program Files\NetBeans-25\netbeans\platform\modules\ext\junit-4.13.2.jar:C:\Program Files\NetBeans-25\netbeans\platform\modules\ext\hamcrest-core-1.3.jar" />
     <property name="java.specification.version" value="20" />
@@ -14,7 +14,7 @@
     <property name="libs.jsp-compilation.src" value="" />
     <property name="libs.JWSAntTasks.javadoc" value="" />
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-20\bin" />
-    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner sistemaAutogestion.IObligatorioTest skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,C:\Users\nicolas.cardona\Mio\AED\aed-obligatorio\build\test\results\TEST-sistemaAutogestion.IObligatorioTest.xml crashfile=C:\Users\nicolas.cardona\Mio\AED\aed-obligatorio\build\junitvmwatcher18316471510270716147.properties propsfile=C:\Users\nicolas.cardona\Mio\AED\aed-obligatorio\build\junit2278827476351941118.properties" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner sistemaAutogestion.IObligatorioTest skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,C:\Users\nicolas.cardona\Mio\AED\aed-obligatorio\build\test\results\TEST-sistemaAutogestion.IObligatorioTest.xml crashfile=C:\Users\nicolas.cardona\Mio\AED\aed-obligatorio\build\junitvmwatcher2335845290446484770.properties propsfile=C:\Users\nicolas.cardona\Mio\AED\aed-obligatorio\build\junit11729503715892511602.properties" />
     <property name="jdk.debug" value="release" />
     <property name="javadoc.use" value="true" />
     <property name="javadoc.notree" value="false" />
@@ -33,7 +33,6 @@
     <property name="libs.eclipselink.maven-pom" value="" />
     <property name="libs.metro.maven-pom" value="" />
     <property name="libs.JAXB-ENDORSED.javadoc" value="" />
-    <property name="org.openide.awt.SwingBrowserImpl.do-not-block-awt" value="false" />
     <property name="sun.java2d.noddraw" value="true" />
     <property name="guice.disable.misplaced.annotation.check" value="true" />
     <property name="libs.primefaces.javadoc" value="" />
@@ -195,7 +194,7 @@
     <property name="libs.jsp-compilation.classpath" value="C:\Program Files\NetBeans-25\netbeans\extide\ant\lib\ant.jar;C:\Program Files\NetBeans-25\netbeans\enterprise\modules\ext\servlet4.0-jsp2.3-api.jar;C:\Program Files\NetBeans-25\netbeans\enterprise\modules\ext\glassfish-jspparser-5.1.0.jar;C:\Program Files\NetBeans-25\netbeans\enterprise\modules\ext\jsf-2_2\javax.faces.jar;C:\Program Files\NetBeans-25\netbeans\enterprise\modules\ext\jstl-api.jar;C:\Program Files\NetBeans-25\netbeans\extide\ant\lib\ant-launcher.jar" />
     <property name="org.apache.commons.logging.Log" value="org.apache.commons.logging.impl.Jdk14Logger" />
     <property name="libs.javaee-api-6.0.classpath" value="C:\Program Files\NetBeans-25\netbeans\enterprise\modules\ext\javaee-api-6.0.jar" />
-    <property name="javac.includesfile.binary" value="C:\Users\nicolas.cardona\Mio\AED\aed-obligatorio\null1427836912" />
+    <property name="javac.includesfile.binary" value="C:\Users\nicolas.cardona\Mio\AED\aed-obligatorio\null486316719" />
     <property name="libs.javaee-api-7.0.classpath" value="C:\Program Files\NetBeans-25\netbeans\enterprise\modules\ext\javaee-api-7.0.jar" />
     <property name="sun.cpu.isalist" value="amd64" />
     <property name="libs.restapi.maven-pom" value="" />
@@ -412,29 +411,41 @@
     <property name="libs.jsp-compiler.classpath" value="C:\Program Files\NetBeans-25\netbeans\enterprise\ant\extra\jspcompile.jar" />
     <property name="libs.javaee-endorsed-api-6.0.classpath" value="C:\Program Files\NetBeans-25\netbeans\enterprise\modules\ext\javaee6-endorsed\javax.annotation.jar;C:\Program Files\NetBeans-25\netbeans\enterprise\modules\ext\javaee6-endorsed\jaxb-api-osgi.jar;C:\Program Files\NetBeans-25\netbeans\enterprise\modules\ext\javaee6-endorsed\webservices-api-osgi.jar" />
   </properties>
-  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarSalaError1" time="0.018" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testDevolverEntradaError1" time="0.021" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testDevolverEntradaError2" time="0.001" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testCalificarEventoError1" time="0.0" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testCalificarEventoError2" time="0.0" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testCalificarEventoError3" time="0.0" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testCalificarEventoError4" time="0.002" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarSalaError1" time="0.001" />
   <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarSalaError2" time="0.0" />
-  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testComprarEntradaError1" time="0.013" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testComprarEntradaError1" time="0.0" />
   <testcase classname="sistemaAutogestion.IObligatorioTest" name="testComprarEntradaError2" time="0.0" />
   <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarClienteError1" time="0.0" />
-  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarClienteError2" time="0.0" />
-  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testEliminarEventoOK" time="0.001" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarClienteError2" time="0.001" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testEliminarEventoOK" time="0.0" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testListarClientesDeEventoError1" time="0.0" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testListarClientesDeEventoError2" time="0.001" />
   <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarClienteOk" time="0.001" />
   <testcase classname="sistemaAutogestion.IObligatorioTest" name="testCrearSistemaDeGestion" time="0.0" />
-  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testNoEsSalaOptima" time="0.0" />
-  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarEventoError1" time="0.0" />
-  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarEventoError2" time="0.001" />
-  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarEventoError3" time="0.002" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testNoEsSalaOptima" time="0.001" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarEventoError1" time="0.001" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarEventoError2" time="0.0" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarEventoError3" time="0.0" />
   <testcase classname="sistemaAutogestion.IObligatorioTest" name="testEsSalaOptima" time="0.0" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testEliminarEventoError1" time="0.001" />
   <testcase classname="sistemaAutogestion.IObligatorioTest" name="testEliminarEventoError2" time="0.006" />
-  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testEliminarSalaError1" time="0.001" />
-  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarEvento" time="0.0" />
-  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testListarClientesOK" time="0.001" />
-  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarSalaOK" time="0.0" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testEliminarSalaError1" time="0.0" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testCalificarEventoOK" time="0.0" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testListarClientesDeEventoOk" time="0.001" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarEvento" time="0.001" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testListarClientesOK" time="0.0" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testRegistrarSalaOK" time="0.001" />
   <testcase classname="sistemaAutogestion.IObligatorioTest" name="testListarEventos" time="0.0" />
   <testcase classname="sistemaAutogestion.IObligatorioTest" name="testListarSalas" time="0.0" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testDevolverEntradaOK" time="0.0" />
   <testcase classname="sistemaAutogestion.IObligatorioTest" name="testEliminarSalaOK" time="0.0" />
-  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testComprarEntradaOk" time="0.001" />
+  <testcase classname="sistemaAutogestion.IObligatorioTest" name="testComprarEntradaOk" time="0.0" />
   <testcase classname="sistemaAutogestion.IObligatorioTest" name="testEliminarSalaRemueveSalaDelListado" time="0.0" />
   <system-out><![CDATA[ANTES de eliminar: Sala Fantasma-50
 DESPUÉS de eliminar: 

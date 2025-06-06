@@ -118,7 +118,7 @@ public class Evento implements Comparable<Evento> {
             Entrada e = new Entrada(c, this, LocalDateTime.now(), false);
 
             // Agregarla al evento
-            this.entradasvendidas.agregarFinal(e);
+            this.entradasvendidas.agregarInicio(e);
             // Agregarla al cliente
             c.getEntradasCompradas().agregarFinal(e);
 
@@ -179,4 +179,19 @@ public class Evento implements Comparable<Evento> {
                 + disponibles + "-"
                 + vendidas;
     }
+    
+    public ListaSE<Cliente> listarClientes(int n){
+        ListaSE<Cliente> clientes = new ListaSE<>();
+        int contador = 0;
+        Nodo<Entrada> actual = entradasvendidas.getInicio();
+
+        while (actual != null && contador < n) {
+            clientes.agregarFinal(actual.getDato().getCliente());
+            contador++;
+            actual = actual.getSiguiente();
+        }
+
+        return clientes;
+    }
+
 }
