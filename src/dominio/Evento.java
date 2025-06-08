@@ -143,12 +143,13 @@ public class Evento implements Comparable<Evento> {
                     e.setDevuelta(true);
                 }
                 entradasvendidas.eliminarElemento(entradaNodo);
+                break; // ← devolvemos solo una
 
             }
             actual = actual.getSiguiente();
         }
         if (ColaDeEspera.cantidadElementos() > 0) {
-            Entrada e = new Entrada(ColaDeEspera.desEncolar(), this, LocalDateTime.now(), false);
+            Entrada e = new Entrada(ColaDeEspera.desencolar(), this, LocalDateTime.now(), false);
             this.entradasvendidas.agregarFinal(e);
         }
     }

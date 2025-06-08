@@ -12,9 +12,9 @@ public interface ICola<T extends Comparable> {
     
     public void encolar(T dato);
     
-    public T desEncolar();
+    public T desencolar();
     
-    public T front();
+    public T frente();
     
     public boolean esVacia();
     

@@ -438,7 +438,7 @@ public class Sistema implements IObligatorio {
             deshechas.insertarOrdenado(registro);
 
             if (!evento.getColaDeEspera().esVacia()) {
-                Cliente siguiente = evento.getColaDeEspera().desEncolar();
+                Cliente siguiente = evento.getColaDeEspera().desencolar();
                 evento.comprarEntrada(siguiente);
             }
 
@@ -490,12 +490,87 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno comprasDeCliente(String cedula) {
-        return Retorno.noImplementada();
+        // Creamos un cliente para buscarlo en la lista
+        Cliente clienteBuscar = new Cliente();
+        clienteBuscar.setCedula(cedula);
+        Cliente cliente = listaClientes.obtenerElemento(clienteBuscar);
+
+        if (cliente == null) {
+            return Retorno.error1(); // Cliente no existe
+        }
+
+        ListaSE<String> compras = new ListaSE<>();
+
+        Nodo<Entrada> actual = cliente.getEntradasCompradas().getInicio();
+        while (actual != null) {
+            Entrada entrada = actual.getDato();
+            String estado = entrada.isDevuelta() ? "D" : "N";
+            String linea = entrada.getEvento().getCodigo() + "-" + estado;
+            compras.agregarFinal(linea);
+            actual = actual.getSiguiente();
+        }
+
+        Retorno r = Retorno.ok();
+        r.valorString = compras.mostrar();
+        return r;
     }
 
     @Override
     public Retorno comprasXDia(int mes) {
-        return Retorno.noImplementada();
+        if (mes < 1 || mes > 12) {
+            return Retorno.error1(); // mes inválido
+        }
+
+        Retorno r = Retorno.ok();
+        ListaSE<String> resumen = new ListaSE<>();
+
+        // Copiamos las entradas del historial sin modificar la pila original
+        ListaSE<Entrada> copiaHistorial = historialCompras.copiarEnLista();
+        Nodo<Entrada> actual = copiaHistorial.getInicio();
+
+        while (actual != null) {
+            Entrada entrada = actual.getDato();
+            if (entrada.getFechaCompra().getMonthValue() == mes) {
+                int dia = entrada.getFechaCompra().getDayOfMonth();
+                boolean encontrado = false;
+
+                Nodo<String> nodoResumen = resumen.getInicio();
+                Nodo<String> anterior = null;
+
+                // Buscamos si ya hay registro para ese día
+                while (nodoResumen != null) {
+                    String dato = nodoResumen.getDato();
+                    int diaGuardado = Integer.parseInt(dato.substring(0, dato.indexOf("-")));
+                    if (diaGuardado == dia) {
+                        int cantidad = Integer.parseInt(dato.substring(dato.indexOf("-") + 1)) + 1;
+                        nodoResumen.setDato(dia + "-" + cantidad);
+                        encontrado = true;
+                        break;
+                    } else if (diaGuardado > dia) {
+                        break;
+                    }
+                    anterior = nodoResumen;
+                    nodoResumen = nodoResumen.getSiguiente();
+                }
+
+                if (!encontrado) {
+                    Nodo<String> nuevoNodo = new Nodo<>();
+                    nuevoNodo.setDato(dia + "-1");
+                    nuevoNodo.setSiguiente(nodoResumen);
+
+                    if (anterior == null) {
+                        resumen.setInicio(nuevoNodo);
+                    } else {
+                        anterior.setSiguiente(nuevoNodo);
+                    }
+                }
+            }
+
+            actual = actual.getSiguiente();
+        }
+
+        r.valorString = resumen.mostrar();
+        return r;
     }
 
 }

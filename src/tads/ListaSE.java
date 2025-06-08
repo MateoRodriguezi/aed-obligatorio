@@ -28,6 +28,10 @@ public class ListaSE<T extends Comparable> implements ILista<T> {
         return inicio;
     }
 
+    public void setInicio(Nodo<T> inicio) {
+        this.inicio = inicio;
+    }
+
     @Override
     public void agregarInicio(T dato) {
         Nodo<T> nuevo = new Nodo<>();

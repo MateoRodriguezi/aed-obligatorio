@@ -122,4 +122,19 @@ public class Pila<T extends Comparable<T>> implements IPila<T> {
         this.tope = auxiliar.tope;
         this.cantidad = auxiliar.cantidad;
     }
+
+    @Override
+    public ListaSE<T> copiarEnLista() {
+        ListaSE<T> lista = new ListaSE<>();
+        Nodo<T> actual = this.tope;
+
+        // Insertamos al inicio para mantener el orden original
+        while (actual != null) {
+            lista.agregarInicio(actual.getDato());
+            actual = actual.getSiguiente();
+        }
+
+        return lista;
+    }
+
 }

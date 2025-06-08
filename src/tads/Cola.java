@@ -30,13 +30,13 @@ public class Cola<T extends Comparable<T>> implements ICola<T> {
             ultimo = nodo;
         } else {
             ultimo.setSiguiente(nodo);
-            ultimo = nodo; // 🔧 ESTO FALTABA
+            ultimo = nodo; // ESTO FALTABA
         }
         cantidadElementos++;
     }
 
     @Override
-    public T desEncolar() {
+    public T desencolar() {
         if (esVacia()) {
             throw new IllegalStateException("La pila está vacía");
         }
@@ -52,7 +52,7 @@ public class Cola<T extends Comparable<T>> implements ICola<T> {
     }
 
     @Override
-    public T front() {
+    public T frente() {
         if (esVacia()) {
             throw new IllegalStateException("La pila está vacía");
         }

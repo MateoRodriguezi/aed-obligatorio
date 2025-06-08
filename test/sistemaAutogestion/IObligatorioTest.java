@@ -844,6 +844,105 @@ public class IObligatorioTest {
     }
 
     @Test
+    public void testComprasDeClienteOK() {
+        miSistema.registrarCliente("11111111", "Mateo");
+        miSistema.registrarSala("Sala 1", 5);
+        LocalDate fecha = LocalDate.of(2025, 12, 25);
+        miSistema.registrarEvento("EVT1", "Concierto", 1, fecha);
+        miSistema.comprarEntrada("11111111", "EVT1");
+
+        Retorno r = miSistema.comprasDeCliente("11111111");
+
+        System.out.println("Test testComprasDeClienteOK - valorString: '" + r.valorString);
+        assertEquals(Retorno.Resultado.OK, r.resultado);
+        assertEquals("EVT1-N", r.valorString);
+    }
+
+    @Test
+    public void testClienteSinCompras() {
+        miSistema.registrarCliente("11111111", "Mateo");
+
+        Retorno r = miSistema.comprasDeCliente("11111111");
+
+        System.out.println("Test sin compras - valorString: '" + r.valorString + "'");
+        assertEquals(Retorno.Resultado.OK, r.resultado);
+        assertEquals("", r.valorString);
+    }
+
+    @Test
+    public void testComprasConDevolucion() {
+        miSistema.registrarCliente("11111111", "Mateo");
+        miSistema.registrarSala("Sala 1", 5);
+        LocalDate fecha = LocalDate.of(2025, 12, 25);
+        miSistema.registrarEvento("EVT1", "Concierto", 2, fecha);
+
+        miSistema.comprarEntrada("11111111", "EVT1");
+        miSistema.comprarEntrada("11111111", "EVT1");
+
+        miSistema.devolverEntrada("11111111", "EVT1");
+
+        Retorno r = miSistema.comprasDeCliente("11111111");
+
+        System.out.println("Test con devoluciones - valorString: " + r.valorString);
+        assertEquals(Retorno.Resultado.OK, r.resultado);
+        assertTrue(r.valorString.contains("EVT1-N"));
+        assertTrue(r.valorString.contains("EVT1-D"));
+    }
+
+    @Test
+    public void testComprasMultiplesEventos() {
+        miSistema.registrarCliente("22222222", "Martu");
+        miSistema.registrarSala("Sala A", 3);
+        miSistema.registrarSala("Sala B", 3);
+
+        LocalDate fecha1 = LocalDate.of(2025, 10, 10);
+        LocalDate fecha2 = LocalDate.of(2025, 11, 15);
+
+        miSistema.registrarEvento("TEC43", "Tech Talk", 1, fecha1);
+        miSistema.registrarEvento("CUC11", "Cultura Show", 1, fecha2);
+
+        miSistema.comprarEntrada("22222222", "TEC43");
+        miSistema.comprarEntrada("22222222", "CUC11");
+
+        miSistema.devolverEntrada("22222222", "CUC11");
+
+        Retorno r = miSistema.comprasDeCliente("22222222");
+
+        System.out.println("Test múltiples eventos - valorString: " + r.valorString);
+
+        // Verificamos formato esperado
+        assertEquals(Retorno.Resultado.OK, r.resultado);
+        assertEquals("TEC43-N#CUC11-D", r.valorString);
+    }
+
+    @Test
+    public void testComprasXDiaDosComprasMismoDia() {
+        miSistema.registrarSala("SalaX", 10);
+        miSistema.registrarCliente("12345678", "Ana");
+        miSistema.registrarCliente("98765432", "Juan"); // ← esto faltaba
+        miSistema.registrarEvento("EVT1", "Evento Test", 5, LocalDate.now());
+
+        // Dos compras válidas
+        miSistema.comprarEntrada("12345678", "EVT1");
+        miSistema.comprarEntrada("98765432", "EVT1");
+
+        int mesActual = LocalDate.now().getMonthValue();
+        int diaActual = LocalDate.now().getDayOfMonth();
+
+        Retorno r = miSistema.comprasXDia(mesActual);
+        System.out.println("Resultado comprasXDia: " + r.valorString);
+
+        // Debería devolver 8-2 (probado 8 de Junio)
+        assertEquals(diaActual + "-2", r.valorString);
+    }
+
+    @Test
+    public void testComprasXDiaMesInvalido() {
+        Retorno r = miSistema.comprasXDia(0);
+        assertEquals(Retorno.Resultado.ERROR_1, r.resultado);
+    }
+
+    @Test
     public void testEliminarSalaRemueveSalaDelListado() {
         miSistema.registrarSala("Sala Fantasma", 50);
 

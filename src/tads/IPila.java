@@ -31,4 +31,6 @@ public interface IPila<T extends Comparable<T>> {
     public void concatenar(Pila<T> otraPila);
 
     public void invertir();
+
+    public ListaSE<T> copiarEnLista();
 }
