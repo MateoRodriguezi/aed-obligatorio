@@ -37,6 +37,8 @@ public class Evento implements Comparable<Evento> {
         this.aforoNecesario = aforoNecesario;
         this.fecha = fecha;
         this.sala = sala;
+        this.disponibilidad = sala.getCapacidad(); // Inicialmente está llena
+
     }
 
     public Evento() {
@@ -113,19 +115,18 @@ public class Evento implements Comparable<Evento> {
     }
 
     public void comprarEntrada(Cliente c) {
-        if (this.entradasvendidas.cantidadElementos() < this.sala.getCapacidad()) {
-            // Crear la entrada
+        if (this.disponibilidad > 0) {
             Entrada e = new Entrada(c, this, LocalDateTime.now(), false);
-
-            // Agregarla al evento
             this.entradasvendidas.agregarInicio(e);
-            // Agregarla al cliente
             c.getEntradasCompradas().agregarFinal(e);
-
+            this.disponibilidad--; // nuevo
         } else {
-            // No hay lugar agregar a lista de espera
             this.ColaDeEspera.encolar(c);
         }
+    }
+
+    public void reintegrarEntrada() {
+        this.disponibilidad++; // Al devolver una entrada, aumenta el cupo disponible
     }
 
     public Boolean tieneEntradasVendidas() {
@@ -179,8 +180,8 @@ public class Evento implements Comparable<Evento> {
                 + disponibles + "-"
                 + vendidas;
     }
-    
-    public ListaSE<Cliente> listarClientes(int n){
+
+    public ListaSE<Cliente> listarClientes(int n) {
         ListaSE<Cliente> clientes = new ListaSE<>();
         int contador = 0;
         Nodo<Entrada> actual = entradasvendidas.getInicio();

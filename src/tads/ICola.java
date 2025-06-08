@@ -21,4 +21,6 @@ public interface ICola<T extends Comparable> {
     public int cantidadElementos();
     
     public void mostrar();
+    
+    public ListaSE<T> copiarOrdenadoPorDato();
 }

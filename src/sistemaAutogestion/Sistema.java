@@ -150,16 +150,28 @@ public class Sistema implements IObligatorio {
         clienteBuscar.setCedula(cedula);
         clienteBuscar = listaClientes.obtenerElemento(clienteBuscar);
         if (clienteBuscar == null) {
-            return Retorno.error1(); // Cliente NO existe
+            return Retorno.error1();
         }
+
         Evento eventoBuscar = new Evento();
         eventoBuscar.setCodigo(codigoEvento);
         eventoBuscar = listaEventos.obtenerElemento(eventoBuscar);
         if (eventoBuscar == null) {
-            return Retorno.error2(); //EVENTO NO EXISTE
+            return Retorno.error2();
         }
 
+        // Guardamos cantidad antes de comprar
+        int antes = eventoBuscar.getEntradasvendidas().cantidadElementos();
+
         eventoBuscar.comprarEntrada(clienteBuscar);
+
+        // Verificamos si realmente se compró (y no quedó en espera)
+        int despues = eventoBuscar.getEntradasvendidas().cantidadElementos();
+        if (despues > antes) {
+            Entrada entradaComprada = clienteBuscar.getEntradasCompradas().obtenerUltimo();
+            historialCompras.apilar(entradaComprada);
+        }
+
         return Retorno.ok();
     }
 
@@ -343,17 +355,21 @@ public class Sistema implements IObligatorio {
         return ret;
     }
 
+    //2.5
+    // Pre-condición: El código del evento no puede ser null. El parámetro n debe ser mayor o igual a 1.
+    // Post-condición: Si el evento existe y n es válido, retorna los últimos n clientes que compraron entradas para el evento.     
+    // Si hay menos de n clientes, se listan todos los disponibles. El resultado se retorna en un string con el formato "cedula-nombre#...".
     @Override
     public Retorno listarClientesDeEvento(String codigo, int n) {
         ListaSE<Cliente> clientes = new ListaSE();
 
-        if(n < 1){
+        if (n < 1) {
             return Retorno.error2();
         }
         Evento eventoBuscar = new Evento();
         eventoBuscar.setCodigo(codigo);
         eventoBuscar = listaEventos.obtenerElemento(eventoBuscar);
-        if(eventoBuscar == null){
+        if (eventoBuscar == null) {
             return Retorno.error1();
         }
         Retorno ret = Retorno.ok();
@@ -362,19 +378,114 @@ public class Sistema implements IObligatorio {
         return ret;
     }
 
+    //2.6
+    // Pre-condición: El sistema debe tener eventos cargados.
+    // Post-condición: Solo se listan eventos que tengan al menos un cliente en su lista de espera. Los eventos están ordenados por código.
+    // Los clientes están ordenados por cédula dentro de cada evento. El resultado se entrega en un string con el formato: "CODIGOEVENTO-CEDULA#...".
     @Override
     public Retorno listarEsperaEvento() {
-        return Retorno.noImplementada();
+        ListaSE<Evento> eventosOrdenados = new ListaSE<>();
+        Nodo<Evento> actual = listaEventos.getInicio();
+        while (actual != null) {
+            eventosOrdenados.insertarOrdenado(actual.getDato());
+            actual = actual.getSiguiente();
+        }
+
+        String salida = "";
+        boolean esPrimero = true;
+
+        actual = eventosOrdenados.getInicio();
+        while (actual != null) {
+            Evento evento = actual.getDato();
+            if (!evento.getColaDeEspera().esVacia()) {
+                ListaSE<Cliente> clientesOrdenados = evento.getColaDeEspera().copiarOrdenadoPorDato();
+                Nodo<Cliente> nodoCliente = clientesOrdenados.getInicio();
+                while (nodoCliente != null) {
+                    Cliente cliente = nodoCliente.getDato();
+
+                    if (!esPrimero) {
+                        salida += "#";
+                    }
+                    salida += evento.getCodigo() + "-" + cliente.getCedula();
+                    esPrimero = false;
+
+                    nodoCliente = nodoCliente.getSiguiente();
+                }
+            }
+            actual = actual.getSiguiente();
+        }
+
+        Retorno ret = Retorno.ok();
+        ret.valorString = salida;
+        return ret;
     }
 
     @Override
     public Retorno deshacerUtimasCompras(int n) {
-        return Retorno.noImplementada();
+        ListaSE<String> deshechas = new ListaSE<>();
+
+        int cantidad = 0;
+        while (!historialCompras.estaVacia() && cantidad < n) {
+            Entrada entrada = historialCompras.desapilar();
+
+            Evento evento = entrada.getEvento();
+            Cliente cliente = entrada.getCliente();
+
+            cliente.getEntradasCompradas().eliminarElemento(entrada);
+            evento.reintegrarEntrada();
+
+            String registro = evento.getCodigo() + "-" + cliente.getCedula();
+            deshechas.insertarOrdenado(registro);
+
+            if (!evento.getColaDeEspera().esVacia()) {
+                Cliente siguiente = evento.getColaDeEspera().desEncolar();
+                evento.comprarEntrada(siguiente);
+            }
+
+            cantidad++;
+        }
+
+        Retorno r = Retorno.ok();
+        r.valorString = deshechas.mostrar(); // El método concatena con #
+        return r;
     }
 
     @Override
     public Retorno eventoMejorPuntuado() {
-        return Retorno.noImplementada();
+        Retorno r = Retorno.ok();
+
+        if (listaEventosCalificados.esVacia()) {
+            r.valorString = "";
+            return r;
+        }
+
+        double maxPromedio = 0;
+        Nodo<Evento> actual = listaEventosCalificados.getInicio();
+
+        // Paso 1: encontrar el mayor promedio
+        while (actual != null) {
+            double promedio = actual.getDato().getPromedioCalificaciones();
+            if (promedio > maxPromedio) {
+                maxPromedio = promedio;
+            }
+            actual = actual.getSiguiente();
+        }
+
+        // Paso 2: recolectar eventos con ese promedio
+        ListaSE<String> mejoresEventos = new ListaSE<>();
+        actual = listaEventosCalificados.getInicio();
+
+        while (actual != null) {
+            Evento e = actual.getDato();
+            if (e.getPromedioCalificaciones() == maxPromedio) {
+                String salida = e.getCodigo() + "-" + (int) maxPromedio;
+                mejoresEventos.insertarOrdenado(salida);
+            }
+            actual = actual.getSiguiente();
+        }
+
+        r.valorString = mejoresEventos.mostrar();
+        return r;
     }
 
     @Override

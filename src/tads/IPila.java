@@ -8,6 +8,27 @@ package tads;
  *
  * @author mateorodriguez
  */
-public interface IPila {
-    
+public interface IPila<T extends Comparable<T>> {
+
+    public boolean estaVacia();
+
+    public void apilar(T dato);
+
+    public T top();
+
+    public T desapilar();
+
+    public void vaciar();
+
+    public void mostrar();
+
+    public int cantidadElementos();
+
+    public Pila<T> copiarPila();
+
+    public void intercambiarTope();
+
+    public void concatenar(Pila<T> otraPila);
+
+    public void invertir();
 }

@@ -356,8 +356,6 @@ public class IObligatorioTest {
         // Ahora Laura debería tener la entrada (fue reasignada automáticamente)
         Retorno r4 = miSistema.devolverEntrada("87654321", "EVT1");
         assertEquals(Retorno.Resultado.OK, r4.resultado);
-        
-        
     }
 
     @Test
@@ -383,11 +381,8 @@ public class IObligatorioTest {
         Retorno r = miSistema.devolverEntrada("12345678", "NOEXISTE");
         assertEquals(Retorno.Resultado.ERROR_2, r.resultado);
     }
-    
-    
+
 //    -----------
-
-
     @Test
     public void testCalificarEventoError1() {
         miSistema.registrarSala("Sala 1", 50);
@@ -450,7 +445,6 @@ public class IObligatorioTest {
     }
 
 //    -----------
-    
     @Test
     public void testListarSalas() {
         miSistema.registrarSala("Sala Verde", 45);
@@ -609,22 +603,22 @@ public class IObligatorioTest {
 
         Retorno resultado3 = miSistema.comprarEntrada("12345678", "Evento 1");
         assertEquals(Retorno.Resultado.OK, resultado3.resultado);
-        
+
         Retorno resultado4 = miSistema.comprarEntrada("12345679", "Evento 1");
         assertEquals(Retorno.Resultado.OK, resultado4.resultado);
-        
+
         Retorno resultado5 = miSistema.listarClientesDeEvento("Evento 1", 2);
         String esperado = "12345679-Mateo#12345678-Nicolas";
         assertEquals(esperado, resultado5.valorString);
     }
-    
+
     @Test
     public void testListarClientesDeEventoError1() {
-    Retorno r = miSistema.listarClientesDeEvento("NoExiste", 6);
-    assertEquals(Retorno.Resultado.ERROR_1, r.resultado);
+        Retorno r = miSistema.listarClientesDeEvento("NoExiste", 6);
+        assertEquals(Retorno.Resultado.ERROR_1, r.resultado);
 
     }
-    
+
     @Test
     public void testListarClientesDeEventoError2() {
         Retorno resultado1 = miSistema.registrarSala("Sala Norte", 100);
@@ -633,14 +627,222 @@ public class IObligatorioTest {
         LocalDate fecha = LocalDate.parse("2025-05-03");
         Retorno resultado2 = miSistema.registrarEvento("Evento 1", "Carreras F1", 100, fecha);
         assertEquals(Retorno.Resultado.OK, resultado2.resultado);
-        
+
         Retorno resultado3 = miSistema.listarClientesDeEvento("Evento 1", 0);
         assertEquals(Retorno.Resultado.ERROR_2, resultado3.resultado);
-        
+
         Retorno resultado4 = miSistema.listarClientesDeEvento("Evento 1", -1);
         assertEquals(Retorno.Resultado.ERROR_2, resultado4.resultado);
     }
-    
+
+    @Test
+    public void testListarEsperaEventoOK() {
+        // Registramos clientes
+        miSistema.registrarCliente("45678992", "Micaela");
+        miSistema.registrarCliente("23331118", "Martina");
+        miSistema.registrarCliente("35679992", "Ramiro");
+
+        // Registramos salas
+        miSistema.registrarSala("Sala 1", 1); // solo una entrada disponible
+        miSistema.registrarSala("Sala 2", 1); // solo una entrada disponible
+
+        // Registramos eventos (importante que los códigos sean distintos y desordenados)
+        miSistema.registrarEvento("KAK34", "Rock Fest", 1, LocalDate.of(2025, 10, 10));
+        miSistema.registrarEvento("TEC43", "Tech Expo", 1, LocalDate.of(2025, 10, 15));
+
+        // Un cliente compra la única entrada en cada evento
+        miSistema.comprarEntrada("45678992", "KAK34");
+        miSistema.comprarEntrada("23331118", "TEC43");
+
+        // Otro cliente intenta comprar y queda en lista de espera
+        miSistema.comprarEntrada("23331118", "KAK34"); // encola a Martina
+        miSistema.comprarEntrada("35679992", "TEC43"); // encola a Ramiro
+
+        // Ejecutamos el método a testear
+        Retorno resultado = miSistema.listarEsperaEvento();
+
+        // Validaciones
+        assertEquals(Retorno.Resultado.OK, resultado.resultado);
+
+        String esperado = "KAK34-23331118#TEC43-35679992";
+        assertEquals(esperado, resultado.valorString);
+    }
+
+    @Test
+    public void testListarEsperaEventoSinEspera() {
+        miSistema.registrarCliente("12345678", "Mateo");
+        miSistema.registrarSala("Sala A", 50);
+        miSistema.registrarEvento("AAA01", "Evento sin espera", 50, LocalDate.of(2025, 11, 1));
+        miSistema.comprarEntrada("12345678", "AAA01");
+
+        Retorno r = miSistema.listarEsperaEvento();
+
+        assertEquals(Retorno.Resultado.OK, r.resultado);
+        assertEquals("", r.valorString); // no debe listar nada
+    }
+
+    @Test
+    public void testListarEsperaEventoMultiplesClientes() {
+        miSistema.registrarCliente("12345678", "Mateo");
+        miSistema.registrarCliente("22345678", "Nicolas");
+        miSistema.registrarCliente("32345678", "Laura");
+        miSistema.registrarCliente("42345678", "Martina");
+        miSistema.registrarCliente("47489126", "Juan");
+
+        miSistema.registrarSala("Sala A", 1);
+        miSistema.registrarEvento("EVT9", "Evento", 1, LocalDate.of(2025, 10, 1));
+
+        miSistema.comprarEntrada("12345678", "EVT9"); // único lugar
+        miSistema.comprarEntrada("22345678", "EVT9"); // espera
+        miSistema.comprarEntrada("32345678", "EVT9"); // espera
+        miSistema.comprarEntrada("42345678", "EVT9"); // espera
+        miSistema.comprarEntrada("47489126", "EVT9"); // espera
+
+        Retorno listar = miSistema.listarClientes();
+        System.out.println("Clientes registrados: " + listar.valorString);
+
+        Retorno r = miSistema.listarEsperaEvento();
+
+        assertEquals(Retorno.Resultado.OK, r.resultado);
+        assertEquals("EVT9-22345678#EVT9-32345678#EVT9-42345678#EVT9-47489126", r.valorString);
+    }
+
+    @Test
+    public void testDeshacerUltimasComprasOK() {
+
+        // Registramos una sala con capacidad 2
+        miSistema.registrarSala("Sala Test", 2);
+
+        // Creamos un evento con aforo 2, el cual podrá usar la sala anterior
+        LocalDate fecha = LocalDate.of(2025, 12, 25);
+        miSistema.registrarEvento("EVT10", "Callejero Fino", 2, fecha);
+
+        // Registramos 3 clientes
+        miSistema.registrarCliente("11111111", "Cliente1");
+        miSistema.registrarCliente("22222222", "Cliente2");
+        miSistema.registrarCliente("33333333", "Cliente3");
+
+        // Dos clientes compran entrada, el tercero queda en lista de espera
+        miSistema.comprarEntrada("11111111", "EVT10"); // entra
+        miSistema.comprarEntrada("22222222", "EVT10"); // entra
+        miSistema.comprarEntrada("33333333", "EVT10"); // espera
+
+        // Deshacemos las 2 últimas compras (las dos primeras que habían entrado)
+        Retorno r = miSistema.deshacerUtimasCompras(2);
+
+        // Comprobamos que el retorno sea OK
+        assertEquals(Retorno.Resultado.OK, r.resultado);
+
+        // El resultado debe contener los dos códigos de evento-cliente deshechos, en orden alfabético
+        String esperado1 = "EVT10-11111111#EVT10-22222222";
+        String esperado2 = "EVT10-22222222#EVT10-11111111";
+
+        System.out.println("valorString retornado: '" + r.valorString + "'");
+
+        assertTrue("El valorString retornado fue: " + r.valorString,
+                r.valorString.equals(esperado1) || r.valorString.equals(esperado2));
+    }
+
+    @Test
+    public void testDeshacerMasQueExistentes() {
+        miSistema.registrarSala("Sala X", 2);
+        miSistema.registrarEvento("EVT01", "Evento Prueba", 2, LocalDate.of(2025, 12, 25));
+        miSistema.registrarCliente("11111111", "Cliente Uno");
+        miSistema.comprarEntrada("11111111", "EVT01");
+
+        Retorno r = miSistema.deshacerUtimasCompras(5); // solo hay 1 compra
+
+        System.out.println("valorString retornado testDeshacerMasQueExistentes: '" + r.valorString + "'");
+
+        assertEquals(Retorno.Resultado.OK, r.resultado);
+        assertEquals("EVT01-11111111", r.valorString);
+    }
+
+    @Test
+    public void testDeshacerCeroCompras() {
+        miSistema.registrarSala("Sala X", 2);
+        miSistema.registrarEvento("EVT02", "Evento", 2, LocalDate.of(2025, 12, 25));
+        miSistema.registrarCliente("22222222", "Cliente Dos");
+        miSistema.comprarEntrada("22222222", "EVT02");
+
+        Retorno r = miSistema.deshacerUtimasCompras(0);
+
+        System.out.println("valorString retornado testDeshacerCeroCompras: '" + r.valorString + "'");
+
+        assertEquals(Retorno.Resultado.OK, r.resultado);
+        assertEquals("", r.valorString); // no se deshizo ninguna compra
+    }
+
+    @Test
+    public void testEventoMejorPuntuadoSinEventos() {
+        miSistema.crearSistemaDeGestion();
+        Retorno r = miSistema.eventoMejorPuntuado();
+        assertEquals(Retorno.Resultado.OK, r.resultado);
+        assertEquals("", r.valorString);
+    }
+
+    @Test
+    public void testEventoMejorPuntuadoUnico() {
+        miSistema.crearSistemaDeGestion();
+        miSistema.registrarSala("SalaA", 100);
+        miSistema.registrarEvento("E001", "Rock", 80, LocalDate.of(2025, 12, 1));
+        miSistema.registrarCliente("11111111", "Ana");
+
+        miSistema.calificarEvento("11111111", "E001", 9, "Muy bueno");
+
+        Retorno r = miSistema.eventoMejorPuntuado();
+
+        System.out.println("Valor retornado testEventoMejorPuntuadoUnico: '" + r.valorString + "'");
+
+        assertEquals(Retorno.Resultado.OK, r.resultado);
+        assertEquals("E001-9", r.valorString);
+    }
+
+    @Test
+    public void testEventoMejorPuntuadoUnoSuperior() {
+        miSistema.crearSistemaDeGestion();
+        miSistema.registrarSala("SalaA", 100);
+        miSistema.registrarEvento("E001", "Rock", 80, LocalDate.of(2025, 12, 1));
+        miSistema.registrarEvento("E002", "Jazz", 80, LocalDate.of(2025, 12, 2));
+
+        miSistema.registrarCliente("11111111", "Ana");
+        miSistema.registrarCliente("22222222", "Luis");
+
+        miSistema.calificarEvento("11111111", "E001", 9, "Muy bueno");
+        miSistema.calificarEvento("22222222", "E002", 7, "Regular");
+
+        Retorno r = miSistema.eventoMejorPuntuado();
+
+        System.out.println("Valor retornado testEventoMejorPuntuadoUnoSuperior: '" + r.valorString + "'");
+
+        assertEquals(Retorno.Resultado.OK, r.resultado);
+        assertEquals("E001-9", r.valorString);
+    }
+
+    @Test
+    public void testEventoMejorPuntuadoEmpate() {
+        miSistema.crearSistemaDeGestion();
+        miSistema.registrarSala("SalaA", 100);
+        miSistema.registrarEvento("E001", "Rock", 80, LocalDate.of(2025, 12, 1));
+        miSistema.registrarEvento("E002", "Jazz", 80, LocalDate.of(2025, 12, 2));
+        miSistema.registrarEvento("E003", "Pop", 80, LocalDate.of(2025, 12, 3));
+
+        miSistema.registrarCliente("11111111", "Ana");
+        miSistema.registrarCliente("22222222", "Luis");
+        miSistema.registrarCliente("33333333", "Sara");
+
+        miSistema.calificarEvento("11111111", "E001", 9, "Muy bueno");
+        miSistema.calificarEvento("22222222", "E002", 9, "Muy bueno");
+        miSistema.calificarEvento("33333333", "E003", 7, "Buena");
+
+        Retorno r = miSistema.eventoMejorPuntuado();
+
+        System.out.println("Valor retornado testEventoMejorPuntuadoEmpate: '" + r.valorString + "'");
+
+        assertEquals(Retorno.Resultado.OK, r.resultado);
+        assertEquals("E001-9#E002-9", r.valorString); // orden alfabético
+    }
+
     @Test
     public void testEliminarSalaRemueveSalaDelListado() {
         miSistema.registrarSala("Sala Fantasma", 50);

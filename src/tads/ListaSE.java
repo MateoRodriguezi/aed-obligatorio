@@ -176,4 +176,17 @@ public class ListaSE<T extends Comparable> implements ILista<T> {
         return invertida;
     }
 
+    @Override
+    public T obtenerUltimo() {
+        if (esVacia()) {
+            return null;
+        }
+
+        Nodo<T> aux = inicio;
+        while (aux.getSiguiente() != null) {
+            aux = aux.getSiguiente();
+        }
+
+        return aux.getDato();
+    }
 }

@@ -10,51 +10,51 @@ package tads;
  */
 public class Cola<T extends Comparable<T>> implements ICola<T> {
 
-
     private Nodo<T> primero = null;
     private Nodo<T> ultimo = null;
     private int cantidadElementos;
-    
-    public Cola(){
+
+    public Cola() {
         primero = null;
         ultimo = null;
         cantidadElementos = 0;
     }
-    
+
     @Override
     public void encolar(T dato) {
         Nodo<T> nodo = new Nodo();
         nodo.setDato(dato);
-        
-        if(esVacia()){
+
+        if (esVacia()) {
             primero = nodo;
             ultimo = nodo;
-        }else{
+        } else {
             ultimo.setSiguiente(nodo);
+            ultimo = nodo; // 🔧 ESTO FALTABA
         }
         cantidadElementos++;
     }
 
     @Override
     public T desEncolar() {
-        if(esVacia()){
+        if (esVacia()) {
             throw new IllegalStateException("La pila está vacía");
         }
         T dato = primero.getDato();
         primero = primero.getSiguiente();
-        
-        if(primero == null){
+
+        if (primero == null) {
             ultimo = null;
         }
         cantidadElementos--;
-        
+
         return dato;
     }
 
     @Override
     public T front() {
-        if(esVacia()){
-                    throw new IllegalStateException("La pila está vacía");
+        if (esVacia()) {
+            throw new IllegalStateException("La pila está vacía");
         }
         return primero.getDato();
     }
@@ -72,10 +72,22 @@ public class Cola<T extends Comparable<T>> implements ICola<T> {
     @Override
     public void mostrar() {
         Nodo<T> aux = primero;
-        while (aux != null){
+        while (aux != null) {
             System.out.println(aux.getDato());
             aux = aux.getSiguiente();
         }
     }
-    
+
+    @Override
+    public ListaSE<T> copiarOrdenadoPorDato() {
+        ListaSE<T> lista = new ListaSE<>();
+        Nodo<T> actual = this.primero;
+
+        while (actual != null) {
+            lista.insertarOrdenado(actual.getDato());
+            actual = actual.getSiguiente();
+        }
+
+        return lista;
+    }
 }

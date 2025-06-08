@@ -40,4 +40,6 @@ public interface ILista<T extends Comparable> {
     public int cantidadElementos();
 
     public ListaSE<T> invertir();
+    
+    public T obtenerUltimo();
 }
