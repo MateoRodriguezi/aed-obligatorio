@@ -250,7 +250,7 @@ public class Sistema implements IObligatorio {
         Calificacion cal = new Calificacion(c, puntaje, comentario);
         e.actualizarPromedio(cal);
         e.getCalificaciones().agregarFinal(cal);  // faltaba agregarla a la lista
-        listaEventosCalificados.insertarOrdenado(e);
+        listaEventosCalificados.insertarOrdenado(e);//VERIFICAR QUE EL EVENTO NO ESTE EN AL LISTA Y SI ESTÁ PONERLO EN LA POSICION CORRECTA SEGUN SU PROMEDIO DE CALIFICACIONES
         return Retorno.ok();
     }
 
@@ -420,6 +420,7 @@ public class Sistema implements IObligatorio {
         return ret;
     }
 
+    //2.7
     @Override
     public Retorno deshacerUtimasCompras(int n) {
         ListaSE<String> deshechas = new ListaSE<>();
@@ -435,7 +436,7 @@ public class Sistema implements IObligatorio {
             evento.reintegrarEntrada();
 
             String registro = evento.getCodigo() + "-" + cliente.getCedula();
-            deshechas.insertarOrdenado(registro);
+            deshechas.insertarOrdenado(registro); //REVISAR ORDENACIÓN
 
             if (!evento.getColaDeEspera().esVacia()) {
                 Cliente siguiente = evento.getColaDeEspera().desencolar();
@@ -450,6 +451,8 @@ public class Sistema implements IObligatorio {
         return r;
     }
 
+    //2.8 CREO QUE PODEMOS AHCERLO CON UN SOLO FOR Y HAY QUE VER SI PODEMOS GUARDAR ORDENADOS POR PUNTAJE AL MOMENTO DE CALIFICAR
+    //     EN ESE CASO SOLO TRAERIAMOS EL GETINICIO.GETDATO
     @Override
     public Retorno eventoMejorPuntuado() {
         Retorno r = Retorno.ok();
@@ -488,6 +491,7 @@ public class Sistema implements IObligatorio {
         return r;
     }
 
+    //2.9
     @Override
     public Retorno comprasDeCliente(String cedula) {
         // Creamos un cliente para buscarlo en la lista
@@ -515,6 +519,8 @@ public class Sistema implements IObligatorio {
         return r;
     }
 
+    
+    //2.10
     @Override
     public Retorno comprasXDia(int mes) {
         if (mes < 1 || mes > 12) {
