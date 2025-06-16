@@ -23,7 +23,6 @@ public class Evento implements Comparable<Evento> {
     private Sala sala;
     private ListaSE<Entrada> entradasvendidas = new ListaSE();
 
-    private ListaSE<Cliente> listaclientesevento;
     private Cola<Cliente> ColaDeEspera = new Cola();
     private int disponibilidad;  // Eliminar la inicialización que depende de sala
     private double promedioCalificaciones;
@@ -65,10 +64,6 @@ public class Evento implements Comparable<Evento> {
 
     public ListaSE<Entrada> getEntradasvendidas() {
         return entradasvendidas;
-    }
-
-    public ListaSE<Cliente> getListaclientesevento() {
-        return listaclientesevento;
     }
 
     public Cola<Cliente> getColaDeEspera() {
