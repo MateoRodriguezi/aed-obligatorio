@@ -143,7 +143,7 @@ public class Sistema implements IObligatorio {
     }
 
     //1.6
-    // Pre-condición: el cliente y el evento deben existir.
+    // Pre-condición: cedula y codigoEvento no pueden ser null. listaCleintes y listaEventos deben estar inicializadas.
     // Post-condición: si hay entradas disponibles, se registra la entrada en el evento y se guarda en el historial; si no, se agrega al cliente a la lista de espera.
     @Override
     public Retorno comprarEntrada(String cedula, String codigoEvento) {
@@ -176,8 +176,8 @@ public class Sistema implements IObligatorio {
     }
 
     //1.7
-    // Pre-condición: el código del evento debe existir y no ser null
-    // Post-condición: se elimina el evento de la lista
+    // Pre-condición: codigo no debe ser null.
+    // Post-condición: si existe el evento se elimina de la lista
     @Override
     public Retorno eliminarEvento(String codigo) {
         Evento eventoBuscar = new Evento();
