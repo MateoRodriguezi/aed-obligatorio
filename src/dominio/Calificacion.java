@@ -31,12 +31,7 @@ public class Calificacion implements Comparable<Calificacion> {
     public void setComentario(String comentario) {
         this.comentario = comentario;
     }
-
-//    public Calificacion(Cliente cliente, int puntaje, String comentario) {
-//        this.cliente = cliente;
-//        this.puntaje = puntaje;
-//        this.comentario = comentario;
-//    }
+    
     public Cliente getCliente() {
         return cliente;
     }

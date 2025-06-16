@@ -19,7 +19,7 @@ public class Sistema implements IObligatorio {
     private ListaSE<Evento> listaEventos;
     private Pila<Entrada> historialCompras;
     private ListaSE<Evento> listaEventosCalificados;
-    private ListaSE<Evento> listaEventosMejorPuntuados = new ListaSE<>();
+    private ListaSE<Evento> listaEventosMejorPuntuados;
 
     //1.1
     // Pre-condición: ninguna
@@ -32,6 +32,7 @@ public class Sistema implements IObligatorio {
         listaEventos = new ListaSE<>();
         historialCompras = new Pila<>();
         listaEventosCalificados = new ListaSE<>();
+        listaEventosMejorPuntuados = new ListaSE<>();
         return Retorno.ok();
     }
 
@@ -219,9 +220,9 @@ public class Sistema implements IObligatorio {
         return Retorno.ok();
     }
 
-// 1.9
-// Pre-condición: cedula, codigoEvento y comentario no pueden ser null. Comentario además no puede ser vacío. puntaje debe ser un número entero.
-// Post-condición: se registra la calificación, se actualiza el promedio y las listas auxiliares correspondientes.
+    // 1.9
+    // Pre-condición: cedula, codigoEvento y comentario no pueden ser null. Comentario además no puede ser vacío. puntaje debe ser un número entero.
+    // Post-condición: se registra la calificación, se actualiza el promedio y las listas auxiliares correspondientes.
     @Override
     public Retorno calificarEvento(String cedula, String codigoEvento, int puntaje, String comentario) {
         if (puntaje > 10 || puntaje < 1) {
@@ -481,9 +482,9 @@ public class Sistema implements IObligatorio {
     }
 
     // 2.8
-// Pre-condición: No tiene
-// Post-condición: Retorna el/los eventos con el mejor promedio de calificaciones en orden alfabético por código. 
-// El resultado está en formato "codigo-promedio#codigo-promedio"
+    // Pre-condición: No tiene
+    // Post-condición: Retorna el/los eventos con el mejor promedio de calificaciones en orden alfabético por código. 
+    // El resultado está en formato "codigo-promedio#codigo-promedio"
     @Override
     public Retorno eventoMejorPuntuado() {
         Retorno r = Retorno.ok();
@@ -498,12 +499,12 @@ public class Sistema implements IObligatorio {
         Nodo<Evento> actual = listaEventosMejorPuntuados.getInicio();
         while (actual != null) {
             Evento e = actual.getDato();
-            int promedioEntero = (int) e.getPromedioCalificaciones();  
+            int promedioEntero = (int) e.getPromedioCalificaciones();
             eventos.insertarOrdenado(e.getCodigo() + "-" + promedioEntero);
             actual = actual.getSiguiente();
         }
 
-        r.valorString = eventos.mostrar(); 
+        r.valorString = eventos.mostrar();
         return r;
     }
 
@@ -542,7 +543,6 @@ public class Sistema implements IObligatorio {
     //Pre-condición: mes es un número entero.
     //Post-condición: Se muestran la cantidad de compras por día en el mes recibido por parámetro, tomando en cuenta todos los eventos y clientes. 
     //Se muestra el número de día (ordenado en forma ascendente) y la cantidad de compras. Si en algún día no se efectuaron compras, no aparece ese número de día. El formato es el siguiente: “2-11#5-8#6-67#7-10#30-1”
-
     @Override
     public Retorno comprasXDia(int mes) {
         if (mes < 1 || mes > 12) {
