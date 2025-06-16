@@ -143,7 +143,7 @@ public class Sistema implements IObligatorio {
     }
 
     //1.6
-    // Pre-condición: cedula y codigoEvento no pueden ser null. listaCleintes y listaEventos deben estar inicializadas.
+    // Pre-condición: cedula y codigoEvento no pueden ser null.
     // Post-condición: si hay entradas disponibles, se registra la entrada en el evento y se guarda en el historial; si no, se agrega al cliente a la lista de espera.
     @Override
     public Retorno comprarEntrada(String cedula, String codigoEvento) {
@@ -177,7 +177,7 @@ public class Sistema implements IObligatorio {
 
     //1.7
     // Pre-condición: codigo no debe ser null.
-    // Post-condición: si existe el evento se elimina de la lista
+    // Post-condición: si existe el evento y no tiene entradas vendidas, se libera la sala y se elimina el evento de la lista
     @Override
     public Retorno eliminarEvento(String codigo) {
         Evento eventoBuscar = new Evento();
@@ -197,7 +197,7 @@ public class Sistema implements IObligatorio {
     }
 
     // 1.8
-    // Pre-condición: el cliente y el evento deben existir en el sistema.
+    // Pre-condición: codigoEvento y cedula no pueden ser null.
     // Post-condición: se elimina la entrada del cliente, y si hay clientes en la lista de espera, se le asigna la entrada al primero en la cola.
     @Override
     public Retorno devolverEntrada(String cedula, String codigoEvento) {
@@ -220,7 +220,7 @@ public class Sistema implements IObligatorio {
     }
 
 // 1.9
-// Pre-condición: cliente y evento con esa cédula y código deben existir, el puntaje debe estar entre 1 y 10, el comentario no puede ser null y el cliente no debe haber calificado antes ese evento.
+// Pre-condición: cedula, codigoEvento y comentario no pueden ser null. Comentario además no puede ser vacío. puntaje debe ser un número entero.
 // Post-condición: se registra la calificación, se actualiza el promedio y las listas auxiliares correspondientes.
     @Override
     public Retorno calificarEvento(String cedula, String codigoEvento, int puntaje, String comentario) {
@@ -381,7 +381,7 @@ public class Sistema implements IObligatorio {
     }
 
     //2.5
-    // Pre-condición: El código del evento no puede ser null. El parámetro n debe ser mayor o igual a 1.
+    // Pre-condición: El código del evento no puede ser null. El parámetro n debe ser un número entero.
     // Post-condición: Si el evento existe y n es válido, retorna los últimos n clientes que compraron entradas para el evento.     
     // Si hay menos de n clientes, se listan todos los disponibles. El resultado se retorna en un string con el formato "cedula-nombre#...".
     @Override
@@ -446,6 +446,9 @@ public class Sistema implements IObligatorio {
     }
 
     //2.7
+    //Pre-condición: n debe ser un número entero historial de compras debe estar correctamente inicializado..
+    //Post:condición: Si hay compras efectuadas, se deshacen la cantidad solicitada en el parámetro n. Teniendo en cuenta el orden, empezando por la última. 
+    //Además si el evento tiene clientes en la cola de espera, se les asigna una entrada a cada cliente(en espera) a medida que se deshacen.
     @Override
     public Retorno deshacerUtimasCompras(int n) {
         ListaSE<String> deshechas = new ListaSE<>();
@@ -505,6 +508,9 @@ public class Sistema implements IObligatorio {
     }
 
     //2.9
+    //Pre-condición:cedula no puede ser null.
+    //Post-condición: muestran las compras realizadas del cliente, indicando D o N para saber si fue devuelta. 
+    //Se muestran en el orden en que fueron compradas con el siguiente formato : “codigoEvento-D#codigoEvento-N”
     @Override
     public Retorno comprasDeCliente(String cedula) {
         // Creamos un cliente para buscarlo en la lista
@@ -533,6 +539,10 @@ public class Sistema implements IObligatorio {
     }
 
     //2.10
+    //Pre-condición: mes es un número entero.
+    //Post-condición: Se muestran la cantidad de compras por día en el mes recibido por parámetro, tomando en cuenta todos los eventos y clientes. 
+    //Se muestra el número de día (ordenado en forma ascendente) y la cantidad de compras. Si en algún día no se efectuaron compras, no aparece ese número de día. El formato es el siguiente: “2-11#5-8#6-67#7-10#30-1”
+
     @Override
     public Retorno comprasXDia(int mes) {
         if (mes < 1 || mes > 12) {
