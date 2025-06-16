@@ -247,7 +247,6 @@ public class IObligatorioTest {
 
         Retorno resultado3 = miSistema.comprarEntrada("12345678", "Evento 1");
         assertEquals(Retorno.Resultado.OK, resultado3.resultado);
-
     }
 
     @Test
@@ -353,9 +352,12 @@ public class IObligatorioTest {
         Retorno r3 = miSistema.devolverEntrada("12345678", "EVT1");
         assertEquals(Retorno.Resultado.OK, r3.resultado);
 
-        // Ahora Laura debería tener la entrada (fue reasignada automáticamente)
-        Retorno r4 = miSistema.devolverEntrada("87654321", "EVT1");
-        assertEquals(Retorno.Resultado.OK, r4.resultado);
+        // Verificar que Laura recibió la entrada de EVT1
+        Retorno r5 = miSistema.comprasDeCliente("87654321");
+        System.out.println("Compras de Laura: " + r5.valorString);
+
+        assertEquals(Retorno.Resultado.OK, r5.resultado);
+        assertTrue("Laura debería haber recibido la entrada de EVT1", r5.valorString.contains("EVT1-N"));
     }
 
     @Test
@@ -383,6 +385,7 @@ public class IObligatorioTest {
     }
 
 //    -----------
+    // Requerimiento 1.9
     @Test
     public void testCalificarEventoError1() {
         miSistema.registrarSala("Sala 1", 50);
@@ -445,6 +448,7 @@ public class IObligatorioTest {
     }
 
 //    -----------
+// Requerimiento 2.1
     @Test
     public void testListarSalas() {
         miSistema.registrarSala("Sala Verde", 45);
@@ -459,6 +463,7 @@ public class IObligatorioTest {
         assertEquals(esperado, ret.valorString);
     }
 
+    // Requerimiento 2.2
     @Test
     public void testListarEventos() {
         // Primero registramos las salas necesarias
@@ -482,6 +487,7 @@ public class IObligatorioTest {
         assertEquals(esperado, ret.valorString);
     }
 
+    // Requerimiento 2.3
     @Test
     public void testListarClientesOK() {
 
@@ -499,6 +505,7 @@ public class IObligatorioTest {
         assertEquals(esperado, ret.valorString);
     }
 
+    // Requerimiento 2.4
     @Test
     public void testEsSalaOptima() {
         // Matriz del ejemplo del  obligatorio
@@ -588,6 +595,7 @@ public class IObligatorioTest {
         assertEquals("No es óptimo", ret2.valorString);
     }
 
+    // Requerimiento 2.5
     @Test
     public void testListarClientesDeEventoOk() {
         Retorno resultado = miSistema.registrarCliente("12345678", "Nicolas");
@@ -635,6 +643,7 @@ public class IObligatorioTest {
         assertEquals(Retorno.Resultado.ERROR_2, resultado4.resultado);
     }
 
+    // Requerimiento 2.6
     @Test
     public void testListarEsperaEventoOK() {
         // Registramos clientes
@@ -646,7 +655,7 @@ public class IObligatorioTest {
         miSistema.registrarSala("Sala 1", 1); // solo una entrada disponible
         miSistema.registrarSala("Sala 2", 1); // solo una entrada disponible
 
-        // Registramos eventos (importante que los códigos sean distintos y desordenados)
+        // Registramos eventos (los códigos sean distintos y desordenados)
         miSistema.registrarEvento("KAK34", "Rock Fest", 1, LocalDate.of(2025, 10, 10));
         miSistema.registrarEvento("TEC43", "Tech Expo", 1, LocalDate.of(2025, 10, 15));
 
@@ -658,10 +667,8 @@ public class IObligatorioTest {
         miSistema.comprarEntrada("23331118", "KAK34"); // encola a Martina
         miSistema.comprarEntrada("35679992", "TEC43"); // encola a Ramiro
 
-        // Ejecutamos el método a testear
         Retorno resultado = miSistema.listarEsperaEvento();
 
-        // Validaciones
         assertEquals(Retorno.Resultado.OK, resultado.resultado);
 
         String esperado = "KAK34-23331118#TEC43-35679992";
@@ -707,13 +714,14 @@ public class IObligatorioTest {
         assertEquals("EVT9-22345678#EVT9-32345678#EVT9-42345678#EVT9-47489126", r.valorString);
     }
 
+    // Requerimiento 2.7
     @Test
     public void testDeshacerUltimasComprasOK() {
 
         // Registramos una sala con capacidad 2
         miSistema.registrarSala("Sala Test", 2);
 
-        // Creamos un evento con aforo 2, el cual podrá usar la sala anterior
+        // Creamos un evento con aforo 2, para usar la sala anterior
         LocalDate fecha = LocalDate.of(2025, 12, 25);
         miSistema.registrarEvento("EVT10", "Callejero Fino", 2, fecha);
 
@@ -733,7 +741,7 @@ public class IObligatorioTest {
         // Comprobamos que el retorno sea OK
         assertEquals(Retorno.Resultado.OK, r.resultado);
 
-        // El resultado debe contener los dos códigos de evento-cliente deshechos, en orden alfabético
+        // El resultado tiene que contener los dos códigos de evento-cliente deshechos, en orden alfabético
         String esperado1 = "EVT10-11111111#EVT10-22222222";
         String esperado2 = "EVT10-22222222#EVT10-11111111";
 
@@ -773,6 +781,7 @@ public class IObligatorioTest {
         assertEquals("", r.valorString); // no se deshizo ninguna compra
     }
 
+    // Requerimiento 2.8
     @Test
     public void testEventoMejorPuntuadoSinEventos() {
         miSistema.crearSistemaDeGestion();
@@ -781,6 +790,7 @@ public class IObligatorioTest {
         assertEquals("", r.valorString);
     }
 
+    // Requerimiento 2.8
     @Test
     public void testEventoMejorPuntuadoUnico() {
         miSistema.crearSistemaDeGestion();
@@ -843,6 +853,7 @@ public class IObligatorioTest {
         assertEquals("E001-9#E002-9", r.valorString); // orden alfabético
     }
 
+    // Requerimiento 2.9
     @Test
     public void testComprasDeClienteOK() {
         miSistema.registrarCliente("11111111", "Mateo");
@@ -916,6 +927,16 @@ public class IObligatorioTest {
     }
 
     @Test
+    public void testComprasDeClienteError1() {
+
+        Retorno r = miSistema.comprasDeCliente("99999999");
+
+        System.out.println("Test cliente inexistente - valorString: " + r.valorString);
+        assertEquals(Retorno.Resultado.ERROR_1, r.resultado);
+    }
+
+    // Requerimiento 2.10
+    @Test
     public void testComprasXDiaDosComprasMismoDia() {
         miSistema.registrarSala("SalaX", 10);
         miSistema.registrarCliente("12345678", "Ana");
@@ -932,7 +953,6 @@ public class IObligatorioTest {
         Retorno r = miSistema.comprasXDia(mesActual);
         System.out.println("Resultado comprasXDia: " + r.valorString);
 
-        // Debería devolver 8-2 (probado 8 de Junio)
         assertEquals(diaActual + "-2", r.valorString);
     }
 

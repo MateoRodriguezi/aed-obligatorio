@@ -19,6 +19,7 @@ public class Sistema implements IObligatorio {
     private ListaSE<Evento> listaEventos;
     private Pila<Entrada> historialCompras;
     private ListaSE<Evento> listaEventosCalificados;
+    private ListaSE<Evento> listaEventosMejorPuntuados = new ListaSE<>();
 
     //1.1
     // Pre-condición: ninguna
@@ -162,7 +163,6 @@ public class Sistema implements IObligatorio {
 
         // Guardamos cantidad antes de comprar
         int antes = eventoBuscar.getEntradasvendidas().cantidadElementos();
-
         eventoBuscar.comprarEntrada(clienteBuscar);
 
         // Verificamos si realmente se compró (y no quedó en espera)
@@ -219,38 +219,63 @@ public class Sistema implements IObligatorio {
         return Retorno.ok();
     }
 
-    // 1.9
-    // Pre-condición: cliente y evento con esa cédula y código deben existir, el puntaje debe estar entre 1 y 10, el comentario no puede ser null y el cliente no debe haber calificado antes ese evento.
-    // Post-condición: se registra la calificación y se actualiza el promedio del evento.
+// 1.9
+// Pre-condición: cliente y evento con esa cédula y código deben existir, el puntaje debe estar entre 1 y 10, el comentario no puede ser null y el cliente no debe haber calificado antes ese evento.
+// Post-condición: se registra la calificación, se actualiza el promedio y las listas auxiliares correspondientes.
     @Override
     public Retorno calificarEvento(String cedula, String codigoEvento, int puntaje, String comentario) {
         if (puntaje > 10 || puntaje < 1) {
-            return Retorno.error3();
-        }
-        Cliente c = new Cliente();
-        c.setCedula(cedula);
-        if (listaClientes.obtenerElemento(c) == null) {
-            return Retorno.error1();
+            return Retorno.error3(); // Puntaje fuera de rango
         }
 
-        Evento e = new Evento();
-        e.setCodigo(codigoEvento);
-        e = listaEventos.obtenerElemento(e); // recupero el objeto
-        if (e == null) {
-            return Retorno.error2();
+        // Verificamos existencia del cliente
+        Cliente clienteTemp = new Cliente();
+        clienteTemp.setCedula(cedula);
+        Cliente cliente = listaClientes.obtenerElemento(clienteTemp);
+        if (cliente == null) {
+            return Retorno.error1(); // Cliente no existe
         }
 
-        Nodo<Calificacion> actual = e.getCalificaciones().getInicio();
-        while (actual != null) {
-            if (actual.getDato().getCliente().equals(c)) {
-                return Retorno.error4();
+        // Verificamos existencia del evento
+        Evento eventoTemp = new Evento();
+        eventoTemp.setCodigo(codigoEvento);
+        Evento evento = listaEventos.obtenerElemento(eventoTemp);
+        if (evento == null) {
+            return Retorno.error2(); // Evento no existe
+        }
+
+        // Validamos que el cliente no haya calificado antes este evento
+        Nodo<Calificacion> nodoCal = evento.getCalificaciones().getInicio();
+        while (nodoCal != null) {
+            if (nodoCal.getDato().getCliente().equals(cliente)) {
+                return Retorno.error4(); // Ya calificó
             }
-            actual = actual.getSiguiente();
+            nodoCal = nodoCal.getSiguiente();
         }
-        Calificacion cal = new Calificacion(c, puntaje, comentario);
-        e.actualizarPromedio(cal);
-        e.getCalificaciones().agregarFinal(cal);  // faltaba agregarla a la lista
-        listaEventosCalificados.insertarOrdenado(e);//VERIFICAR QUE EL EVENTO NO ESTE EN AL LISTA Y SI ESTÁ PONERLO EN LA POSICION CORRECTA SEGUN SU PROMEDIO DE CALIFICACIONES
+
+        // Crear calificación y actualizar promedio
+        Calificacion cal = new Calificacion(cliente, puntaje, comentario);
+        evento.getCalificaciones().agregarFinal(cal);
+        evento.actualizarPromedio(cal);
+
+        // Insertar en lista de eventos calificados (orden alfabético)
+        listaEventosCalificados.insertarOrdenado(evento);
+
+        // Actualizar lista de eventos mejor puntuados
+        if (listaEventosMejorPuntuados.esVacia()) {
+            listaEventosMejorPuntuados.agregarFinal(evento);
+        } else {
+            double maxPromedio = ((Evento) listaEventosMejorPuntuados.getInicio().getDato()).getPromedioCalificaciones();
+            double nuevoPromedio = evento.getPromedioCalificaciones();
+
+            if (nuevoPromedio > maxPromedio) {
+                listaEventosMejorPuntuados.vaciar();
+                listaEventosMejorPuntuados.agregarFinal(evento);
+            } else if (nuevoPromedio == maxPromedio) {
+                listaEventosMejorPuntuados.agregarFinal(evento);
+            }
+        }
+
         return Retorno.ok();
     }
 
@@ -433,10 +458,11 @@ public class Sistema implements IObligatorio {
             Cliente cliente = entrada.getCliente();
 
             cliente.getEntradasCompradas().eliminarElemento(entrada);
+            evento.getEntradasvendidas().eliminarElemento(entrada);
             evento.reintegrarEntrada();
 
             String registro = evento.getCodigo() + "-" + cliente.getCedula();
-            deshechas.insertarOrdenado(registro); //REVISAR ORDENACIÓN
+            deshechas.insertarOrdenado(registro);
 
             if (!evento.getColaDeEspera().esVacia()) {
                 Cliente siguiente = evento.getColaDeEspera().desencolar();
@@ -451,43 +477,30 @@ public class Sistema implements IObligatorio {
         return r;
     }
 
-    //2.8 CREO QUE PODEMOS AHCERLO CON UN SOLO FOR Y HAY QUE VER SI PODEMOS GUARDAR ORDENADOS POR PUNTAJE AL MOMENTO DE CALIFICAR
-    //     EN ESE CASO SOLO TRAERIAMOS EL GETINICIO.GETDATO
+    // 2.8
+// Pre-condición: No tiene
+// Post-condición: Retorna el/los eventos con el mejor promedio de calificaciones en orden alfabético por código. 
+// El resultado está en formato "codigo-promedio#codigo-promedio"
     @Override
     public Retorno eventoMejorPuntuado() {
         Retorno r = Retorno.ok();
 
-        if (listaEventosCalificados.esVacia()) {
+        if (listaEventosMejorPuntuados.esVacia()) {
             r.valorString = "";
             return r;
         }
 
-        double maxPromedio = 0;
-        Nodo<Evento> actual = listaEventosCalificados.getInicio();
+        ListaSE<String> eventos = new ListaSE<>();
 
-        // Paso 1: encontrar el mayor promedio
-        while (actual != null) {
-            double promedio = actual.getDato().getPromedioCalificaciones();
-            if (promedio > maxPromedio) {
-                maxPromedio = promedio;
-            }
-            actual = actual.getSiguiente();
-        }
-
-        // Paso 2: recolectar eventos con ese promedio
-        ListaSE<String> mejoresEventos = new ListaSE<>();
-        actual = listaEventosCalificados.getInicio();
-
+        Nodo<Evento> actual = listaEventosMejorPuntuados.getInicio();
         while (actual != null) {
             Evento e = actual.getDato();
-            if (e.getPromedioCalificaciones() == maxPromedio) {
-                String salida = e.getCodigo() + "-" + (int) maxPromedio;
-                mejoresEventos.insertarOrdenado(salida);
-            }
+            int promedioEntero = (int) e.getPromedioCalificaciones();  
+            eventos.insertarOrdenado(e.getCodigo() + "-" + promedioEntero);
             actual = actual.getSiguiente();
         }
 
-        r.valorString = mejoresEventos.mostrar();
+        r.valorString = eventos.mostrar(); 
         return r;
     }
 
@@ -519,7 +532,6 @@ public class Sistema implements IObligatorio {
         return r;
     }
 
-    
     //2.10
     @Override
     public Retorno comprasXDia(int mes) {

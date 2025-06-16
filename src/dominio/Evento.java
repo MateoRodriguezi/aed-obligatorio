@@ -37,8 +37,7 @@ public class Evento implements Comparable<Evento> {
         this.aforoNecesario = aforoNecesario;
         this.fecha = fecha;
         this.sala = sala;
-        this.disponibilidad = sala.getCapacidad(); // Inicialmente está llena
-
+        this.disponibilidad = sala.getCapacidad(); // Tiene toda la capacidad de la sala
     }
 
     public Evento() {
@@ -143,14 +142,15 @@ public class Evento implements Comparable<Evento> {
                     e.setDevuelta(true);
                 }
                 entradasvendidas.eliminarElemento(entradaNodo);
-                break; // ← devolvemos solo una
-
+                this.reintegrarEntrada(); // Faltaba liberar el cupo
+                break;
             }
             actual = actual.getSiguiente();
         }
+
         if (ColaDeEspera.cantidadElementos() > 0) {
-            Entrada e = new Entrada(ColaDeEspera.desencolar(), this, LocalDateTime.now(), false);
-            this.entradasvendidas.agregarFinal(e);
+            Cliente siguiente = ColaDeEspera.desencolar();
+            this.comprarEntrada(siguiente); // reasignación completa
         }
     }
 
